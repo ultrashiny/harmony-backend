@@ -6,3 +6,15 @@ scikit-learn
 pymongo
 motor
 python-dotenv
+python-decouple
+pydantic-settings
+beanie
+email-validator
+python-jose[cryptography]
+passlib
+bcrypt
+python-multipart
+pillow
+opencv-python
+dlib
+mediapipe
