@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 from apps.user.models import User
+from apps.profile.models import Profile
 
 from apps.api import router
 from apps.config import settings
@@ -28,7 +29,8 @@ async def app_init():
     await init_beanie(
         database=app.mongodb,
         document_models=[
-            User
+            User,
+            Profile
         ]
     )
 

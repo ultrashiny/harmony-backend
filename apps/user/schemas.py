@@ -15,9 +15,3 @@ class UserOut(BaseModel):
     last_name: Optional[str]
     disabled: bool = False
     credits: int = 0
-
-class ProfileSave(BaseModel):
-    id: UUID
-    name: str
-    race: str
-    points: list[list]

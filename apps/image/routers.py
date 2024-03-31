@@ -6,6 +6,7 @@ from fastapi.responses import FileResponse
 from apps.user.deps import get_current_user
 from apps.user.models import User
 from .service import ImageService
+from .schemas import ImageFeatures
 
 img_router = APIRouter()
 
@@ -17,13 +18,13 @@ async def upload(id: str, direction: str, img: UploadFile = File(...), user: Use
     dir.mkdir(parents=True, exist_ok=True)
     return await ImageService.save(dir, direction, img)
 
-@img_router.post('/generate/{id}', summary="Generate feature images")
-async def generate(id: str, points: str, lines: str, user: User = Depends(get_current_user)):
+@img_router.post('/generate', summary="Generate feature images")
+async def generate(features: ImageFeatures, user: User = Depends(get_current_user)):
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
-    dir = Path(f"./GENERATE/{id}")
+    dir = Path(f"./GENERATES/{features.id}")
     dir.mkdir(parents=True, exist_ok=True)
-    return await ImageService.generate(id,json.JSONDecoder().decode(points), json.JSONDecoder().decode(lines))
+    return await ImageService.generate(features.id,features.points, features.lines)
 
 
 @img_router.get('/feat/{id}/{index}', summary="Get one feature image")

@@ -62,6 +62,15 @@ class Measure:
         self.array = None
 
     def get(self):
+        if isinstance(self.value, float):
+            self.value = round(self.value, 2)
+        elif isinstance(self.value, list):
+            update = []
+            for t in self.value:
+                if isinstance(t, float):
+                    t = round(t, 2)
+                    update.append(t)
+            self.value = update
         return {
             "measure": self.name,
             "value": self.value,
@@ -294,15 +303,15 @@ class MeasureGonionMouthRelationship(Measure):
 class MeasureRecessionRelativeFrankfortPlane(Measure):
     def calc(self):
         if getPosition(self.points[35][0], self.lines[5]):
-            self.value("none")
+            self.value = "none"
         else:
             d = getDistanceP2L(self.points[35][0], self.lines[5])
             if d <= 4:
-                self.value("slight")
+                self.value = "slight"
             elif d <= 8:
-                self.value("moderate")
+                self.value = "moderate"
             else:
-                self.value("extreme")
+                self.value = "extreme"
         self.thresholds = [0, 0, 0, 0, 0, 0, 0]
         self.array = ["none", "slight", "moderate", "extreme"]
 
@@ -328,7 +337,7 @@ class MeasureEyeSeparationRatio(Measure):
     def calc(self):
         a = getDistance(self.points[12][0], self.points[12][1])
         b = getDistance(self.points[17][0], self.points[17][1])
-        self.value(a * 100 / b)
+        self.value = a * 100 / b
         self.thresholds = [0, 1, -0.7, 0, 0, 0, 0]
         self.minArray = [[44.3, 43.6, 43.1, 42.6, 42, 41, 35],[45, 44.3, 43.8, 43.3, 42.7, 42, 35]]
         self.maxArray = [[47.4, 48.4, 48.9, 49.4, 50, 51, 58],[47.9, 48.6, 49.1, 49.6, 50.2, 51, 58]]
@@ -339,7 +348,7 @@ class MeasureFacialThirds(Measure):
         b = getDistance(self.points[19][0], self.points[5][0])
         c = getDistance(self.points[29][0], self.points[19][0])
         s = a + b + c
-        self.value = ([a/s, b/s, c/s] * 100)
+        self.value = [x * 100 for x in [a/s, b/s, c/s]]
         self.thresholds = [0, 1, -0.7, 0, 0, 0, 0]
         self.minArray = [[[31.5, 30.5, 29, 26.5, 25, 24, 18],[31.5, 31, 29.5, 29.5, 28, 27, 18]],
                          [[29.5, 28, 26.5, 25, 23.5, 22.5, 18],[30, 29.5, 27, 25, 24, 23, 18]]]
@@ -602,13 +611,17 @@ class Measures:
             MeasureMedialCanthalAngle()
         ]
        
-        for index in len(self.measures):
-            self.measures[index] = Measure(race, gender, features[index], points, lines)
+        for index in range (len(self.measures)):
+            self.measures[index].race = race
+            self.measures[index].gender = gender
+            self.measures[index].name = features[index]
+            self.measures[index].points = points
+            self.measures[index].lines = lines
 
     def get_values(self):
-        res = {}
+        res = []
         for measure in self.measures:
             measure.calc()
-            res.update(measure.get())
+            res.append(measure.get())
 
         return res

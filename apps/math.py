@@ -51,6 +51,10 @@ def getAngle(a, b):
     slope1 = getSlope(a[0], a[1])
     slope2 = getSlope(b[0], b[1])
     angle = math.degrees(math.atan2(slope1 - slope2, 1 + slope1*slope2))
+    if angle < 0:
+        angle = angle + 180
+    elif angle > 180:
+        angle = angle - 180
     return angle
 
 def getDistance(a, b):
@@ -100,3 +104,16 @@ def getRectArea(c, r):  # center, radius
     TL = {'x': c['x'] - r, 'y': c['y'] - r}
     BR = {'x': c['x'] + r, 'y': c['y'] + r}
     return TL, BR
+
+def applyFormat(points_array):
+    temp_pts_array = []
+    for points in points_array:
+        temp_points = []
+        for point in points:
+            print(point)
+            temp = {}
+            temp['x'] = point[0]
+            temp['y'] = point[1]
+            temp_points.append(temp)
+        temp_pts_array.append(temp_points)
+    return temp_pts_array

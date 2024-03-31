@@ -24,7 +24,7 @@ class ImageService:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Failed to save file as JPG: {e}")
         
     @staticmethod
-    async def generate(id: str, points: json, lines: json):
+    async def generate(id: str, points: list, lines: list):
         f = Path(f"./UPLOADS/{id}") / "f.jpg"
         s = Path(f"./UPLOADS/{id}") / "s.jpg"
         if not os.path.exists(f):

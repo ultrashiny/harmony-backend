@@ -3,7 +3,7 @@ import cv2
 import dlib
 import mediapipe as mp
 
-from apps.math import getIntersection
+from apps.math import applyFormat, getIntersection
 
 DELTA = 0.005
 
@@ -161,7 +161,7 @@ def getProfileLandmarks(imgPath):
     profileLandmarks = getLandmarksUsing68(imgPath, IndexListUsing68, profileLandmarks)
     profileLandmarks = getLandmarksUsing81(imgPath, IndexListUsing81, profileLandmarks)
     profileLandmarks = getLandmarksUsingMP(imgPath, IndexListUsingMP, profileLandmarks)
-    return profileLandmarks.tolist()
+    return applyFormat(profileLandmarks)
 
 def mainProcess(id: str):    
     return {"points":getProfileLandmarks(f"./UPLOADS/{id}/f.jpg")}
