@@ -17,4 +17,4 @@ python-multipart
 pillow
 opencv-python
 dlib
-mediapipe
+mediapipe 
