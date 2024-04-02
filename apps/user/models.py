@@ -8,6 +8,8 @@ class User(Document):
     username: str = Indexed(str, unique=True)
     email: EmailStr = Indexed(EmailStr, unique=True)
     hashed_password: str
+    customer_id: Optional[str] = None
+    subscription_id: Optional[str] = None
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     disabled: Optional[bool] = False

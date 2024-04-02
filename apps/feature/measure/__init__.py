@@ -60,6 +60,7 @@ class Measure:
         self.minArray = None
         self.maxArray = None
         self.array = None
+        self.ideal = None
 
     def get(self):
         if isinstance(self.value, float):
@@ -74,11 +75,14 @@ class Measure:
         return {
             "measure": self.name,
             "value": self.value,
-            "index": self.get_index()
+            "index": self.get_index(),
+            "ideal": self.ideal
         }
     
     def get_index(self):
         if self.array is None:
+            self.ideal = f"{self.minArray[self.gender][0] + self.thresholds[self.race]} - "
+            self.ideal += f"{self.maxArray[self.gender][0] + self.thresholds[self.race]}"
             for i in range(len(self.minArray[0])):
                 min = self.minArray[self.gender][i] + self.thresholds[self.race]
                 max = self.maxArray[self.gender][i] + self.thresholds[self.race]
@@ -86,6 +90,7 @@ class Measure:
                     return i
             return i
         else:
+            self.ideal = self.array[0]
             for i in range(len(self.array)):
                 if self.value == self.array[i]:
                     return i
@@ -357,13 +362,17 @@ class MeasureFacialThirds(Measure):
     
     def get_index(self):
         if self.gender == 0: # Male
+            self.ideal = f"{self.minArray[self.value[2] == max(self.value)][self.gender][0] + self.thresholds[self.race]} - "
+            self.ideal += f"{self.maxArray[self.value[2] == max(self.value)][self.gender][0] + self.thresholds[self.race]}"
             for i in range(len(self.minArray)):
-                if all(x > self.minArray[self.value[2] == max(self.value)][self.gender][i] and x < self.maxArray[self.value[2] == max(self.value)][self.gender][i] for x in self.value):
+                if all(x > self.minArray[self.value[2] == max(self.value)][self.gender][i] + self.thresholds[self.race] and x < self.maxArray[self.value[2] == max(self.value)][self.gender][i] + self.thresholds[self.race] for x in self.value):
                     return i
             return i
         else:
+            self.ideal = f"{self.minArray[self.value[2] != max(self.value)][self.gender][0] + self.thresholds[self.race]} - "
+            self.ideal += f"{self.maxArray[self.value[2] != max(self.value)][self.gender][0] + self.thresholds[self.race]}"
             for i in range(len(self.minArray)):
-                if all(x > self.minArray[self.value[2] != max(self.value)][self.gender][i] and x < self.maxArray[self.value[2] != max(self.value)][self.gender][i] for x in self.value):
+                if all(x > self.minArray[self.value[2] != max(self.value)][self.gender][i] + self.thresholds[self.race] and x < self.maxArray[self.value[2] != max(self.value)][self.gender][i] + self.thresholds[self.race] for x in self.value):
                     return i
             return i
 

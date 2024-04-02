@@ -5,7 +5,7 @@ from typing import Any
 from jose import jwt
 from pydantic import ValidationError
 from apps.config import settings
-from apps.user.deps import get_current_user
+from apps.user.deps import get_current_user, get_user
 from apps.user.models import User
 from apps.user.schemas import UserOut
 from apps.user.service import UserService
@@ -28,9 +28,13 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()) -> Any:
         "refresh_token": create_refresh_token(user.user_id),
     }
 
-@auth_router.get('/', summary="Get User", response_model=UserOut)
+@auth_router.get('/', summary="Get current user")
 async def test_token(user: User = Depends(get_current_user)):
     return user
+
+@auth_router.get('/{auth_token}', summary="Get user from token", response_model=UserOut)
+async def get_user(auth_token):
+    return get_user(auth_token)
 
 @auth_router.post('/refresh', summary="Refresh expired access token with refresh token", response_model=TokenSchema)
 async def refresh_token(token: str = Body(...)):

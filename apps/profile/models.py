@@ -18,7 +18,7 @@ class Profile(Document):
         return self.name
     
     @classmethod
-    async def by_user_id(cls, user_id:UUID) -> List['Profile']:
+    async def by_user_id(cls, user_id:str) -> List['Profile']:
         return await cls.find(cls.user_id == user_id).to_list()
 
     class Settings:

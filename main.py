@@ -9,6 +9,8 @@ from apps.profile.models import Profile
 from apps.api import router
 from apps.config import settings
 
+
+
 app = FastAPI(
     title=settings.APP_NAME,
 )

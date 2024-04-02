@@ -11,17 +11,21 @@ from .schemas import ImageFeatures
 img_router = APIRouter()
 
 @img_router.post('/{id}/{direction}', summary="Upload one image")
-async def upload(id: str, direction: str, img: UploadFile = File(...), user: User = Depends(get_current_user)):
-    if not user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
+async def upload(id: str, direction: str, img: UploadFile = File(...), 
+                #  user: User = Depends(get_current_user)
+                 ):
+    # if not user:
+    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     dir = Path(f"./UPLOADS/{id}")
     dir.mkdir(parents=True, exist_ok=True)
     return await ImageService.save(dir, direction, img)
 
 @img_router.post('/generate', summary="Generate feature images")
-async def generate(features: ImageFeatures, user: User = Depends(get_current_user)):
-    if not user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
+async def generate(features: ImageFeatures, 
+                #    user: User = Depends(get_current_user)
+                   ):
+    # if not user:
+    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     dir = Path(f"./GENERATES/{features.id}")
     dir.mkdir(parents=True, exist_ok=True)
     return await ImageService.generate(features.id,features.points, features.lines)
