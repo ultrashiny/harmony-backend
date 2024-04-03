@@ -37,5 +37,14 @@ class User(Document):
     async def by_email(self, email: str) -> "User":
         return await self.find_one(self.email == email)
     
+    @classmethod
+    async def use_one_credit(self) -> "User":
+        if self.credits and self.credits > 0:
+            self.credits -= 1
+            await self.save()
+            return self
+        else:
+            return ValueError("No credits left to use.")
+    
     class Settings:
         name = "users"

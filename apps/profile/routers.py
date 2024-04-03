@@ -11,11 +11,16 @@ profile_router = APIRouter()
 
 @profile_router.post('/', summary="Save/Update one profile")
 async def create_profile(data: ProfileSave, 
-                        #  user: User = Depends(get_current_user)
+                         user: User = Depends(get_current_user)
                         ):
-    # if not user:
-    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
-    return await ProfileService.save(data)
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
+    
+    try:
+        user.use_one_credit()
+        return await ProfileService.save(data)
+    except:
+        raise HTTPException(status_code=status.HTTP_402_PAYMENT_REQUIRED, detail="No credit remained")
 
 @profile_router.get('/{user_id}', summary="Get all profiles of current user")
 async def get_profiles(user_id: UUID):

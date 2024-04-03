@@ -56,7 +56,7 @@ async def create_document(file_name: str, data: ProfileDownload):
         else:
             no = index - 23
             start_cell = 'G'
-        ws[chr(ord(start_cell)) + str(7 + no)] = no
+        ws[chr(ord(start_cell)) + str(7 + no)] = no + 1
         print(chr(ord(start_cell)) + str(7 + no))
         ws[chr(ord(start_cell) + 1) + str(7 + no)] = feature["name"]
         ws[chr(ord(start_cell) + 1) + str(7 + no)].hyperlink = feature["image"]
