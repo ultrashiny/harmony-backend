@@ -81,8 +81,10 @@ class Measure:
     
     def get_index(self):
         if self.array is None:
-            self.ideal = f"{self.minArray[self.gender][0] + self.thresholds[self.race]} - "
-            self.ideal += f"{self.maxArray[self.gender][0] + self.thresholds[self.race]}"
+            result = self.minArray[self.gender][0] + self.thresholds[self.race]
+            self.ideal = f"{result:.2f} - "
+            result = self.maxArray[self.gender][0] + self.thresholds[self.race]
+            self.ideal += f"{result:.2f}"
             for i in range(len(self.minArray[0])):
                 min = self.minArray[self.gender][i] + self.thresholds[self.race]
                 max = self.maxArray[self.gender][i] + self.thresholds[self.race]

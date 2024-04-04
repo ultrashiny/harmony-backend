@@ -1,4 +1,5 @@
 from openpyxl import Workbook
+from openpyxl.styles import PatternFill
 from ..schemas import ProfileDownload
 async def create_document(file_name: str, data: ProfileDownload):
     wb = Workbook()
@@ -44,7 +45,6 @@ async def create_document(file_name: str, data: ProfileDownload):
     ws['D7'] = '=B7/C7*100'
     ws['D8'] = '=B8/C8*100'
     
-    print(data)
     ws['B1'] = data.name
     ws['B2'] = data.gender
     ws['B3'] = data.race
@@ -57,11 +57,18 @@ async def create_document(file_name: str, data: ProfileDownload):
             no = index - 23
             start_cell = 'G'
         ws[chr(ord(start_cell)) + str(7 + no)] = no + 1
-        print(chr(ord(start_cell)) + str(7 + no))
         ws[chr(ord(start_cell) + 1) + str(7 + no)] = feature["name"]
         ws[chr(ord(start_cell) + 1) + str(7 + no)].hyperlink = feature["image"]
         ws[chr(ord(start_cell) + 2) + str(7 + no)] = feature["value"]
-        ws[chr(ord(start_cell) + 3) + str(7 + no)] = feature["score"]
+        start = int('FF0000', 16)
+        end = int('00FF00', 16)
+        left = feature["score"] - feature["minscore"]
+        right = feature["maxscore"] - feature["score"]
+        val = (int(start) * int(right) + int(end) * int(left)) // (int(right) + int(left))
+        col = format(val, '06X')
+        fill = PatternFill(start_color=col, end_color=col, fill_type='solid')
+        ws[chr(ord(start_cell) + 3) + str(7 + no)].fill = fill
+        # ws[chr(ord(start_cell) + 3) + str(7 + no)] = feature["score"]
         ws[chr(ord(start_cell) + 4) + str(7 + no)] = feature["ideal"]
         ws[chr(ord(start_cell) + 5) + str(7 + no)] = feature["meaning"]
         ws[chr(ord(start_cell) + 6) + str(7 + no)] = feature["advice"]

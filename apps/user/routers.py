@@ -26,7 +26,6 @@ async def create_user(data: UserAuth):
 
 @user_router.post('/update', summary="Update a user")
 async def update_user(data: UserUpdate):
-    print("HELLO WORLD")
     try:
         return await UserService.update_user(data)
     except pymongo.errors.DuplicateKeyError:
@@ -41,6 +40,18 @@ async def create_subscription(data: UserSubscription):
         return await UserService.create_subscription(data)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+    
+@user_router.post('/create-checkout-session')
+async def create_checkout_session(url: str, price_id: str, user:User = Depends(get_current_user)):
+    response = await stripe.checkout.Session.create(
+        success_url=url,
+        line_items=[{"price": price_id, "quantity": 1}],
+        mode="subscription",
+        customer=user.customer_id,
+    )
+    return response.url
+
+
     
 @user_router.post('/cancel_subscription')
 async def cancel_subscription(subscription_id: str):
