@@ -117,3 +117,9 @@ def applyFormat(points_array):
             temp_points.append(temp)
         temp_pts_array.append(temp_points)
     return temp_pts_array
+
+async def CompleteMarkPoints(points, RLs):
+    points[54][0] = getIntersection((points[49][0], points[52][0]), RLs[5])
+    points[34][0] = getIntersection((points[40][0], points[35][0]), RLs[3])
+    points[56][0] = getIntersection(RLs[4], RLs[6])
+    return points

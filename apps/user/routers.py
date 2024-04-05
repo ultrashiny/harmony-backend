@@ -43,7 +43,7 @@ async def create_subscription(data: UserSubscription):
     
 @user_router.post('/create-checkout-session')
 async def create_checkout_session(url: str, price_id: str, user:User = Depends(get_current_user)):
-    response = await stripe.checkout.Session.create(
+    response = stripe.checkout.Session.create(
         success_url=url,
         line_items=[{"price": price_id, "quantity": 1}],
         mode="subscription",

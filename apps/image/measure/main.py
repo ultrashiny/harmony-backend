@@ -2,7 +2,7 @@ from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 import os
 from apps.draw import DrawDottedLines, DrawPoints, DrawReferenceLines, DrawSolidLines, GetAreaImage, GetFeatureArea, RemakePointArrayBaseOnCrop
-from apps.math import getCenter, getIntersection, getParallel, getVertical
+from apps.math import CompleteMarkPoints, getCenter, getIntersection, getParallel, getVertical
 
 position_list = [
     [{"x": 61.26482213438737, "y": 0}, {"x": 61.26482213438737, "y": 0}],
@@ -1536,6 +1536,7 @@ async def createReportImages(id, f_canvas, s_canvas, points, lines):
     DIR = f"./GENERATES/{id}"
     os.makedirs(DIR, exist_ok=True)
     RLs = lines
+    points = await CompleteMarkPoints(points, RLs)
     f_url = f"./UPLOADS/{id}/f.jpg"
     create_eye_separation_ratio_image(points, RLs, DIR, 0, f_canvas)
     create_facial_thirds_image(points, RLs, DIR, 1, f_canvas)

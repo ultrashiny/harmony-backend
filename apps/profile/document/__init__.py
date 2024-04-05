@@ -68,7 +68,7 @@ async def create_document(file_name: str, data: ProfileDownload):
         col = format(val, '06X')
         fill = PatternFill(start_color=col, end_color=col, fill_type='solid')
         ws[chr(ord(start_cell) + 3) + str(7 + no)].fill = fill
-        # ws[chr(ord(start_cell) + 3) + str(7 + no)] = feature["score"]
+        ws[chr(ord(start_cell) + 3) + str(7 + no)] = feature["score"]
         ws[chr(ord(start_cell) + 4) + str(7 + no)] = feature["ideal"]
         ws[chr(ord(start_cell) + 5) + str(7 + no)] = feature["meaning"]
         ws[chr(ord(start_cell) + 6) + str(7 + no)] = feature["advice"]

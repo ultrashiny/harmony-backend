@@ -138,7 +138,7 @@ class MeasureFacialConvexityGlabella(Measure):
     def calc(self):
         a = (self.points[32][0], self.points[43][0])
         b = (self.points[50][0], self.points[43][0])
-        self.value = getAngle(a, b)
+        self.value = 180 - getAngle(a, b)
         self.thresholds = [0, 2, 1, -2, 3, -3, 0]
         self.minArray = [[168, 161, 163, 160, 155, 140], [166, 163, 161, 159, 155, 140]]
         self.maxArray = [[176, 179, 181, 183, 184, 195], [175, 178, 180, 182, 184, 195]]
@@ -180,9 +180,9 @@ class MeasureOrbitalVector(Measure):
             self.value = "neutral"
         else:
             if position == 1:
-                self.value = "negative"
-            if position == -1:
                 self.value = "positive"
+            if position == -1:
+                self.value = "negative"
         self.thresholds = [0, 0, 0, 0, 0, 0, 0]
         self.array = ["positive", "neutral", "negative"]     
 
@@ -190,7 +190,7 @@ class MeasureTotalFacialConvexity(Measure):
     def calc(self):
         a = (self.points[32][0], self.points[40][0])
         b = (self.points[50][0], self.points[40][0])
-        self.value = getAngle(a, b)
+        self.value = 180 - getAngle(a, b)
         self.thresholds = [0, 5, 4, -1, 2, -3, 0]
         self.minArray = [[137.5, 135.5, 132.5, 129.5, 126.5, 124.5, 100],[137.5, 135.5, 132.5, 129.5, 126.5, 124.5, 100]]
         self.maxArray = [[148.5, 150.5, 153.5, 156.5, 159.5, 161.5, 180],[148.5, 150.5, 153.5, 156.5, 159.5, 161.5, 180]]
@@ -208,7 +208,7 @@ class MeasureFacialConvexityNasion(Measure):
     def calc(self):
         a = (self.points[35][0], self.points[43][0])
         b = (self.points[50][0], self.points[43][0])
-        self.value = getAngle(a, b)
+        self.value = 180 - getAngle(a, b)
         self.thresholds = [0, 2, 1, -2, 3, -3, 0]
         self.minArray = [[163, 160, 158, 155, 152, 120], [161, 158, 156, 153, 152, 120]]
         self.maxArray = [[179, 173, 175, 178, 181, 195], [179, 173, 175, 178, 181, 195]]
@@ -296,7 +296,7 @@ class MeasureNasomentalAngle(Measure):
     def calc(self):
         a = (self.points[35][0], self.points[40][0])
         b = (self.points[50][0], self.points[40][0])
-        self.value = getAngle(a, b)
+        self.value = 180 - getAngle(a, b)
         self.thresholds = [0, -3, -0.12, 0, -0.03, -0.03, 0]
         self.minArray = [[125, 120, 118, 116, 114, 100], [125, 120, 118, 116, 114, 100]]
         self.maxArray = [[132, 133.5, 134.5, 136.5, 138.5, 150],[132, 133.5, 134.5, 136.5, 138.5, 150]]
@@ -326,7 +326,7 @@ class MeasureBrowridgeInclinationAngle(Measure):
     def calc(self):
         a = (self.lines[7][0], self.lines[7][1])
         b = (self.points[32][0], self.points[31][0])
-        self.value = getAngle(a, b)
+        self.value = 180 - getAngle(a, b)
         self.thresholds = [0, 0, 0, 0, 0, 0, 0]
         self.minArray = [[13, 10, 8, 6, 4, 2, 0], [10, 7, 5, 3, 1, 1, 0]]
         self.maxArray = [[24, 27, 29, 31, 33, 36, 45], [22, 25, 27, 29, 31, 39, 45]]
@@ -335,7 +335,7 @@ class MeasureNasalTipAngle(Measure):
     def calc(self):
         a = (self.points[36][0], self.points[40][0])
         b = (self.points[41][0], self.points[40][0])
-        self.value = getAngle(a, b)
+        self.value = 180 - getAngle(a, b)
         self.thresholds = [0, 0, 0, 0, 0, -10, 0]
         self.minArray = [[112, 108, 104, 100, 97, 70], [118, 115, 111, 108, 105, 70]]
         self.maxArray = [[125, 129, 133, 137, 140, 170], [131, 134, 138, 141, 144, 170]]
@@ -380,11 +380,11 @@ class MeasureFacialThirds(Measure):
 
 class MeasureLateralCanthalTilt(Measure):
     def calc(self):
-        a0 = (self.lines[16][0], self.lines[16][1])
-        b0 = (self.points[11][0], self.points[16][0])
-        a1 = (self.lines[16][1], self.lines[16][0])
+        a0 = (self.lines[16][1], self.lines[16][0])
+        b0 = (self.points[16][0], self.points[11][0])
+        a1 = (self.lines[16][0], self.lines[16][1])
         b1 = (self.points[11][1], self.points[16][1])
-        l = getAngle(a0, b0)
+        l = 180 - getAngle(a0, b0)
         r = getAngle(a1, b1)
         self.value = (l + r) / 2
         self.thresholds = [0, 1.5, 2, 0, 0, 0, 0]
@@ -397,8 +397,8 @@ class MeasureFacialWHRatio(Measure):
         b = getDistance(self.points[21][0], self.points[6][0])
         self.value = a / b
         self.thresholds = [0, 1, -0.7, 0, 0, 0, 0]
-        self.minArray = [[44.3, 43.6, 43.1, 42.6, 42, 41, 35],[45, 44.3, 43.8, 43.3, 42.7, 42, 35]]
-        self.maxArray = [[47.4, 48.4, 48.9, 49.4, 50, 51, 58],[47.9, 48.6, 49.1, 49.6, 50.2, 51, 58]]
+        self.minArray = [[1.9, 1.85, 1.8, 1.75, 1.7, 1.66, 1.3],[1.9, 1.85, 1.8, 1.75, 1.7, 1.66, 1.3]]
+        self.maxArray = [[2.06, 2.11, 2.16, 2.21, 2.26, 2.3, 2.3],[2.06, 2.11, 2.16, 2.21, 2.26, 2.3, 2.3]]
 
 class MeasureJawFrontalAngle(Measure):
     def calc(self):
@@ -519,7 +519,7 @@ class MeasureDeviationOfIaaJfa(Measure):
         a1 = (self.points[26][1], self.points[28][1])
         b0 = (self.points[9][0], self.points[19][0])
         b1 = (self.points[9][1], self.points[19][0])
-        self.value = getAngle(a0, a1) - getAngle(b0, b1)
+        self.value = abs(getAngle(a0, a1) - getAngle(b0, b1))
         self.thresholds = [0, 0, 0, 0, 0, 0, 0]
         self.minArray = [[0, 2.5, 5, 10, 15, 20], [0, 2.5, 5, 10, 15, 20]]
         self.maxArray = [[2.5, 5, 10, 15, 20, 100], [2.5, 5, 10, 15, 20, 100]]
@@ -566,7 +566,7 @@ class MeasureMedialCanthalAngle(Measure):
         a1 = (self.points[15][0], self.points[16][0])
         b0 = (self.points[13][1], self.points[16][1])
         b1 = (self.points[15][1], self.points[16][1])
-        self.value = (getAngle(a0, a1) + getAngle(b0, b1)) / 2
+        self.value = (getAngle(a0, a1) + (180 - getAngle(b0, b1))) / 2
         self.thresholds = [0, 0, 8, 0, 0, 0, 0]
         self.minArray = [[20, 17, 15, 13, 11, 9, 5], [22, 20, 17, 15, 13, 11, 5]]
         self.maxArray = [[42, 50, 56, 63, 69, 75, 120], [44, 52, 58, 65, 71, 77, 120]]
