@@ -116,7 +116,7 @@ def DrawDottedLine(painter, st, ed, space=10, color=(0, 255, 0), size=2):
         y = st['y'] + i * step_y
         painter.ellipse((x-size, y-size, x+size, y+size), fill=color)
 
-def DrawSolidLine(painter, st, ed, color=(0, 255, 0), width=4):
+def DrawSolidLine(painter, st, ed, color=(0, 255, 0), width=2):
     st = (st['x'], st['y'])
     ed = (ed['x'], ed['y'])
     painter.line([st, ed], fill=color, width=width)
@@ -133,7 +133,7 @@ def DrawSolidLines(painter:ImageDraw, lines):
         B = line[1]
         DrawSolidLine(painter, A, B)
 
-def DrawPoint(painter, point, color=(255, 0, 0), size=4):
+def DrawPoint(painter, point, color=(255, 0, 0), size=2):
     painter.ellipse((point['x']-size, point['y']-size, point['x']+size, point['y']+size), color)
 
 def DrawPoints(painter:ImageDraw, points):

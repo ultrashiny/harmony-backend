@@ -1,4 +1,4 @@
-from apps.math import getAngle, getCenter, getDistance, getDistanceP2L, getPosition
+from apps.math import getAngle, getCenter, getDistance, getDistanceP2L, getIntersection, getPosition, getVertical
 
 features = [
     "EyeSeparationRatio",
@@ -215,7 +215,8 @@ class MeasureFacialConvexityNasion(Measure):
 
 class MeasureNasalProjection(Measure):
     def calc(self):
-        a = getDistanceP2L(self.points[40][0], self.lines[3])
+        temp = getIntersection((self.points[40][0], getVertical(self.points[40][0], self.lines[3])), self.lines[3])
+        a = getDistance(self.points[40][0], temp)
         b = getDistance(self.points[40][0], self.points[34][0])
         self.value = a / b
         self.thresholds = [0, -0.1, -0.1, 0, -0.07, 0, 0]
@@ -224,7 +225,8 @@ class MeasureNasalProjection(Measure):
 
 class MeasureNasalWHRatio(Measure):
     def calc(self):
-        a = getDistanceP2L(self.points[40][0], self.lines[3])
+        temp = getIntersection((self.points[40][0], getVertical(self.points[40][0], self.lines[3])), self.lines[3])
+        a = getDistance(self.points[40][0], temp)
         b = getDistance(self.points[40][0], self.points[56][0])
         self.value = a / b
         self.thresholds = [0, -0.05, -0.12, 0, -0.03, -0.03, 0]
@@ -404,7 +406,7 @@ class MeasureJawFrontalAngle(Measure):
     def calc(self):
         a = (self.points[26][0], self.points[28][0])
         b = (self.points[26][1], self.points[28][1])
-        self.value = getAngle(a, b)
+        self.value = 180 - getAngle(a, b)
         self.thresholds = [0, 0, 0, 0, 0, 0, 0]
         self.minArray = [[84.5, 80.5, 76.5, 72.5, 69.5, 66.5, 40],[86, 82.5, 79, 75.5, 72, 69, 40]]
         self.maxArray = [[95, 99, 103, 107, 110, 113, 150],[97, 100.5, 104, 107.5, 111, 114, 150]]
@@ -527,8 +529,9 @@ class MeasureDeviationOfIaaJfa(Measure):
 class MeasureEyebrowTilt(Measure):
     def calc(self):
         a = getAngle((self.points[7][0], self.points[4][0]), self.lines[10])
-        b = getAngle((self.points[7][1], self.points[4][1]), self.lines[10])
+        b = 180 - getAngle((self.points[7][1], self.points[4][1]), self.lines[10])
         self.value = (a + b) / 2
+        print(a, b)
         self.thresholds = [0, 0, 0, 0, 0, 0, 0]
         self.minArray = [[5, 3, 0, -2, -4, -15], [11, 9, 6, 4, 2, -15]]
         self.maxArray = [[13, 15, 18, 20, 22, 40], [18.7, 20.7, 23.7, 25.7, 27.7, 40]]
