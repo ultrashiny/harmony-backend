@@ -562,7 +562,7 @@ def create_eye_spacing_ratio_image(points, RLs, DIR, index, canvas):
                    (points[9][1], c2)]
     drawPoints  = [points[9][0], points[9][1],
                    points[16][0], points[16][1],
-                   c1, c2]
+                   c1, c2, c3]
     
     DrawReferenceLines(painter, RLs, RLIndexes)
     DrawDottedLines(painter,dotLines)
