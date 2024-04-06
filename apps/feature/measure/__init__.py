@@ -157,7 +157,7 @@ class MeasureNasoFacialAngle(Measure):
         a = (self.points[39][0], self.points[35][0])
         b = (self.points[50][0], self.points[35][0])
         self.value = getAngle(a, b)
-        self.thresholds = [0, 2, -3, -3, 0, 0, 0]
+        self.thresholds = [0, 2, -3, 0, 0, 0, 0]
         self.minArray = [[30, 36, 28, 26.5, 25.5, 10], [30, 36, 28, 26.5, 25.5, 10]]
         self.maxArray = [[36, 40, 42, 43.5, 44.5, 60], [36, 40, 42, 43.5, 44.5, 60]]
 
@@ -300,7 +300,7 @@ class MeasureNasomentalAngle(Measure):
         a = (self.points[35][0], self.points[40][0])
         b = (self.points[50][0], self.points[40][0])
         self.value = 180 - getAngle(a, b)
-        self.thresholds = [0, -3, -0.12, 0, -0.03, -0.03, 0]
+        self.thresholds = [0, -3, 3, 0, 0, 0, 0]
         self.minArray = [[125, 120, 118, 116, 114, 100], [125, 120, 118, 116, 114, 100]]
         self.maxArray = [[132, 133.5, 134.5, 136.5, 138.5, 150],[132, 133.5, 134.5, 136.5, 138.5, 150]]
 
@@ -350,7 +350,7 @@ class MeasureEyeSeparationRatio(Measure):
         self.value = a * 100 / b
         self.thresholds = [0, 1, -0.7, 0, 0, 0, 0]
         self.minArray = [[44.3, 43.6, 43.1, 42.6, 42, 41, 35],[45, 44.3, 43.8, 43.3, 42.7, 42, 35]]
-        self.maxArray = [[47.4, 48.4, 48.9, 49.4, 50, 51, 58],[47.9, 48.6, 49.1, 49.6, 50.2, 51, 58]]
+        self.maxArray = [[47.7, 48.4, 48.9, 49.4, 50, 51, 58],[47.9, 48.6, 49.1, 49.6, 50.2, 51, 58]]
 
 class MeasureFacialThirds(Measure):
     def calc(self):
@@ -399,9 +399,9 @@ class MeasureFacialWHRatio(Measure):
         a = getDistance(self.points[17][0], self.points[17][1])
         b = getDistance(self.points[21][0], self.points[6][0])
         self.value = a / b
-        self.thresholds = [0, 1, -0.7, 0, 0, 0, 0]
+        self.thresholds = [0, 0.03, -0.04, 0.02, 0, 0, 0]
         self.minArray = [[1.9, 1.85, 1.8, 1.75, 1.7, 1.66, 1.3],[1.9, 1.85, 1.8, 1.75, 1.7, 1.66, 1.3]]
-        self.maxArray = [[2.06, 2.11, 2.16, 2.21, 2.26, 2.3, 2.3],[2.06, 2.11, 2.16, 2.21, 2.26, 2.3, 2.3]]
+        self.maxArray = [[2.06, 2.11, 2.16, 2.21, 2.26, 2.3, 2.8],[2.06, 2.11, 2.16, 2.21, 2.26, 2.3, 2.8]]
 
 class MeasureJawFrontalAngle(Measure):
     def calc(self):
