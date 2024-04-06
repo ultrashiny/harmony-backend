@@ -62,7 +62,7 @@ def GetFeatureArea(points, indexes, circular=False):
     W = max(BR['x'] - TL['x'], BR['y'] - TL['y']) / 2 + 10
 
     if circular:
-        return C, R
+        return getRectArea(C, R), R*2
     else:
         return getRectArea(C, W), W*2
     

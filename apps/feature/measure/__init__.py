@@ -237,11 +237,12 @@ class MeasureRickettsELine(Measure):
     def calc(self):
         a = getPosition(self.points[45][0], (self.points[40][0], self.points[50][0]))
         b = getPosition(self.points[47][0], (self.points[40][0], self.points[50][0]))
-        if a * b == 1:
+        if a * b != 1:
             self.value = "unideal"
         else:
             a = getDistanceP2L(self.points[45][0], (self.points[40][0], self.points[50][0]))
             b = getDistanceP2L(self.points[47][0], (self.points[40][0], self.points[50][0]))
+            print(a, b, "****")
             r = a / b
             if r >= 1.5 and r <= 2.5:
                 self.value = "ideal"
