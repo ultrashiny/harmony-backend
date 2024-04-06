@@ -105,7 +105,7 @@ def DrawReferenceLines(painter:ImageDraw, RLs, indexes):
         ed = RLs[index][1]
         DrawInfiniteLine(painter, st, ed)
 
-def DrawDottedLine(painter, st, ed, space=10, color=(0, 255, 0), size=1.5):
+def DrawDottedLine(painter, st, ed, space=10, color=(0, 255, 0), size=2):
     delta_x = ed['x'] - st['x']
     delta_y = ed['y'] - st['y']
     length = (delta_x**2 + delta_y**2)**0.5
@@ -117,7 +117,7 @@ def DrawDottedLine(painter, st, ed, space=10, color=(0, 255, 0), size=1.5):
         y = st['y'] + i * step_y
         painter.ellipse((x-size, y-size, x+size, y+size), fill=color)
 
-def DrawSolidLine(painter, st, ed, color=(0, 255, 0), width=3):
+def DrawSolidLine(painter, st, ed, color=(0, 255, 0), width=4):
     st = (st['x'], st['y'])
     ed = (ed['x'], ed['y'])
     painter.line([st, ed], fill=color, width=width)
@@ -134,7 +134,7 @@ def DrawSolidLines(painter:ImageDraw, lines):
         B = line[1]
         DrawSolidLine(painter, A, B)
 
-def DrawPoint(painter, point, color=(255, 0, 0), size=2):
+def DrawPoint(painter, point, color=(255, 0, 0), size=3):
     painter.ellipse((point['x']-size, point['y']-size, point['x']+size, point['y']+size), color)
 
 def DrawPoints(painter:ImageDraw, points):

@@ -72,10 +72,10 @@ ZERO = 0.0001
 def midpoint(x1, y1, x2, y2):
     return (x1 + x2) / 2, (y1 + y2) / 2
 
-def draw_point(draw, point, dot_color=(255, 0, 0), dot_size=2):
+def draw_point(draw, point, dot_color=(255, 0, 0), dot_size=3):
     draw.ellipse((point[0]-dot_size*2, point[1]-dot_size*2, point[0]+dot_size*2, point[1]+dot_size*2), dot_color)
 
-def draw_dotted_line(draw, point1, point2, dot_spacing=10, dot_color=(0, 255, 0), dot_size=1.5):
+def draw_dotted_line(draw, point1, point2, dot_spacing=10, dot_color=(0, 255, 0), dot_size=2):
     delta_x = point2[0] - point1[0]
     delta_y = point2[1] - point1[1]
     line_length = (delta_x**2 + delta_y**2)**0.5
@@ -88,7 +88,7 @@ def draw_dotted_line(draw, point1, point2, dot_spacing=10, dot_color=(0, 255, 0)
         draw.ellipse((x-dot_size, y-dot_size, x+dot_size, y+dot_size), fill=dot_color)        
     draw.ellipse((point1[0]-dot_size*2, point1[1]-dot_size*2, point1[0]+dot_size*2, point1[1]+dot_size*2), (255, 0, 0))
     draw.ellipse((point2[0]-dot_size*2, point2[1]-dot_size*2, point2[0]+dot_size*2, point2[1]+dot_size*2), (255, 0, 0))
-def draw_dotted_line_p_vertical_line(draw, point1, point2, dot_spacing=10, dot_color=(0, 255, 0), dot_size=2, line_color=(0, 255, 0), line_width=4):
+def draw_dotted_line_p_vertical_line(draw, point1, point2, dot_spacing=10, dot_color=(0, 255, 0), dot_size=3, line_color=(0, 255, 0), line_width=4):
     # Draw the dotted line between point1 and point2
     delta_x = point2[0] - point1[0]
     delta_y = 0
@@ -104,11 +104,11 @@ def draw_dotted_line_p_vertical_line(draw, point1, point2, dot_spacing=10, dot_c
     # Draw circles at the specified points
     draw.ellipse((point1[0] - dot_size * 2, point1[1] - dot_size * 2, point1[0] + dot_size * 2, point1[1] + dot_size * 2), (255, 0, 0))
     draw.ellipse((point2[0] - dot_size * 2, point2[1] - dot_size * 2, point2[0] + dot_size * 2, point2[1] + dot_size * 2), (255, 0, 0))
-def draw_solid_line(draw, point1, point2, line_color=(0, 255, 0), line_width=3, dot_size=1.5):
+def draw_solid_line(draw, point1, point2, line_color=(0, 255, 0), line_width=3, dot_size=3):
     draw.line([point1, point2], fill=line_color, width=line_width)
     draw.ellipse((point1[0]-dot_size*2, point1[1]-dot_size*2, point1[0]+dot_size*2, point1[1]+dot_size*2), (255, 0, 0))
     draw.ellipse((point2[0]-dot_size*2, point2[1]-dot_size*2, point2[0]+dot_size*2, point2[1]+dot_size*2), (255, 0, 0))
-def draw_infinite_line(draw, point1, point2, line_color=(57, 208, 192), line_width=1, dot_size=2):
+def draw_infinite_line(draw, point1, point2, line_color=(57, 208, 192), line_width=1, dot_size=3):
     x1, y1 = point1
     x2, y2 = point2
     slope = (y2 - y1) / (x2 - x1) if x2 - x1 != 0 else float('inf')
