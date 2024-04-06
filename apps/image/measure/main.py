@@ -75,7 +75,7 @@ def midpoint(x1, y1, x2, y2):
 def draw_point(draw, point, dot_color=(255, 0, 0), dot_size=2):
     draw.ellipse((point[0]-dot_size*2, point[1]-dot_size*2, point[0]+dot_size*2, point[1]+dot_size*2), dot_color)
 
-def draw_dotted_line(draw, point1, point2, dot_spacing=10, dot_color=(0, 255, 0), dot_size=2):
+def draw_dotted_line(draw, point1, point2, dot_spacing=10, dot_color=(0, 255, 0), dot_size=1.5):
     delta_x = point2[0] - point1[0]
     delta_y = point2[1] - point1[1]
     line_length = (delta_x**2 + delta_y**2)**0.5
@@ -104,7 +104,7 @@ def draw_dotted_line_p_vertical_line(draw, point1, point2, dot_spacing=10, dot_c
     # Draw circles at the specified points
     draw.ellipse((point1[0] - dot_size * 2, point1[1] - dot_size * 2, point1[0] + dot_size * 2, point1[1] + dot_size * 2), (255, 0, 0))
     draw.ellipse((point2[0] - dot_size * 2, point2[1] - dot_size * 2, point2[0] + dot_size * 2, point2[1] + dot_size * 2), (255, 0, 0))
-def draw_solid_line(draw, point1, point2, line_color=(0, 255, 0), line_width=4, dot_size=2):
+def draw_solid_line(draw, point1, point2, line_color=(0, 255, 0), line_width=3, dot_size=1.5):
     draw.line([point1, point2], fill=line_color, width=line_width)
     draw.ellipse((point1[0]-dot_size*2, point1[1]-dot_size*2, point1[0]+dot_size*2, point1[1]+dot_size*2), (255, 0, 0))
     draw.ellipse((point2[0]-dot_size*2, point2[1]-dot_size*2, point2[0]+dot_size*2, point2[1]+dot_size*2), (255, 0, 0))
@@ -196,8 +196,8 @@ def find_intersection(line1, line2):
 def rescale(startpoint, width, points):
     scaled_points = []
     for point in points:
-        scaled_x = (point[0] - startpoint[0]) * 300 / width
-        scaled_y = (point[1] - startpoint[1]) * 300 / width
+        scaled_x = (point[0] - startpoint[0]) * 512 / width
+        scaled_y = (point[1] - startpoint[1]) * 512 / width
         scaled_points.append((scaled_x, scaled_y))
     return scaled_points
 
@@ -572,75 +572,34 @@ def create_eye_spacing_ratio_image(points, RLs, DIR, index, canvas):
     crop.save(output_filename)
 
 #15
-def create_eye_aspect_ratio_image(img_url, mark_points, DIR, index):
-    img = Image.open(img_url)
+def create_eye_aspect_ratio_image(points, RLs, DIR, index, canvas):
+    indexes = [10, 14, 16, 11]
+    RLIndexes = []
+    (TL, BR), W = GetFeatureArea(points, indexes)    # TopLeft, BottomRight, Width
+    crop = GetAreaImage(canvas, TL, BR)
+    painter = ImageDraw.Draw(crop)
+    points = RemakePointArrayBaseOnCrop(TL, W, points)
+    RLs = RemakePointArrayBaseOnCrop(TL, W, RLs)
+
+    #TEMP POINTS
+
+    dotLines    = [(points[10][1], points[14][1]),
+                   (points[10][0], points[14][0]),]
+    solidLines  = [(points[16][1], points[11][1]),
+                   (points[16][0], points[11][0]),]
+    drawPoints  = [points[10][0], points[10][1],
+                   points[16][0], points[16][1],
+                   points[14][0], points[14][1],
+                   points[11][0], points[11][1],
+                   ]
     
-    # Calculate the updated dimensions while maintaining aspect ratio
-    if img.height >= img.width:
-        updated_height = 512
-        updated_width = img.width * 512 / img.height
-    else:
-        updated_width = 512
-        updated_height = img.height * 512 / img.width
+    DrawReferenceLines(painter, RLs, RLIndexes)
+    DrawDottedLines(painter,dotLines)
+    DrawSolidLines(painter, solidLines)
+    DrawPoints(painter, drawPoints)
 
-    img = img.resize((int(updated_width), int(updated_height)))
-    canvas = Image.new('RGB', (512, 512), (0, 0, 0))
-
-    x_offset = (512 - img.width) // 2
-    y_offset = (512 - img.height) // 2
-
-    canvas.paste(img, (x_offset, y_offset))
-    draw = ImageDraw.Draw(canvas)  
-
-    x1 = mark_points[10][1]["x"]
-    y1 = mark_points[10][1]["y"]
-    x2 = mark_points[14][1]["x"]
-    y2 = mark_points[14][1]["y"]
-    x3 = mark_points[16][1]["x"]
-    y3 = mark_points[16][1]["y"]
-    x4 = mark_points[11][1]["x"]
-    y4 = mark_points[11][1]["y"]
-    x5 = mark_points[10][0]["x"]
-    y5 = mark_points[10][0]["y"]
-    x6 = mark_points[14][0]["x"]
-    y6 = mark_points[14][0]["y"]
-    x7 = mark_points[16][0]["x"]
-    y7 = mark_points[16][0]["y"]
-    x8 = mark_points[11][0]["x"]
-    y8 = mark_points[11][0]["y"]
-    
-
-    x_min = min(x1,x2,x3,x4,x5,x6,x7,x8)
-    x_max = max(x1,x2,x3,x4,x5,x6,x7,x8)
-    y_min = min(y1,y2,y3,y4,y5,y6,y7,y8)
-    y_max = max(y1,y2,y3,y4,y5,y6,y7,y8)
-    
-    center_x = (x_min + x_max) / 2
-    center_y = (y_min + y_max) / 2
-    half_side_length = max(x_max - center_x, y_max - center_y)
-
-    # Define the square's bounding coordinates
-    square_x_min = max(center_x - half_side_length, 0)
-    square_y_min = max(center_y - half_side_length, 0)
-    square_x_max = min(center_x + half_side_length, 512)
-    square_y_max = min(center_y + half_side_length, 512)
-
-    # Crop the image to the square
-    cropped_img = canvas.crop((square_x_min-10, square_y_min-10, square_x_max+10, square_y_max+10))
-    cropped_img = cropped_img.resize((300, 300))
-    width = half_side_length*2+20
-    start_x = center_x - half_side_length - 10
-    start_y = center_y - half_side_length -10
-    [(x1, y1), (x2, y2), (x3, y3), (x4, y4), (x5,y5),(x6,y6),(x7,y7),(x8,y8)] = rescale((start_x, start_y), width, [(x1, y1), (x2, y2), (x3, y3), (x4, y4), (x5,y5),(x6,y6),(x7,y7),(x8,y8)])
-    draw = ImageDraw.Draw(cropped_img)
-    draw_solid_line(draw, (x1,y1),(x2,y2))
-    draw_solid_line(draw, (x5,y5),(x6,y6))
-    draw_dotted_line(draw, (x3,y3),(x4,y4))
-    draw_dotted_line(draw, (x7,y7),(x8,y8))
-    output_filename = os.path.join(DIR, f"{create_eye_aspect_ratio_image.__name__}.jpg")
     output_filename = os.path.join(DIR, f"{index}.jpg")
-    cropped_img.save(output_filename)
-    return True
+    crop.save(output_filename)
 
 #16
 def create_lower_lip_to_upper_lip_ratio_image(points, RLs, DIR, index, canvas):
@@ -723,7 +682,7 @@ def create_deviation_of_iaa_image(img_url, mark_points, DIR, index):
 
     # Crop the image to the square
     cropped_img = canvas.crop((square_x_min-10, square_y_min-10, square_x_max+10, square_y_max+10))
-    cropped_img = cropped_img.resize((300, 300))
+    cropped_img = cropped_img.resize((512, 512))
     width = half_side_length*2+20
     start_x = center_x - half_side_length - 10
     start_y = center_y - half_side_length -10
@@ -785,7 +744,7 @@ def create_eyebrow_tilt_image(img_url, mark_points, DIR, index):
 
     # Crop the image to the square
     cropped_img = canvas.crop((square_x_min-10, square_y_min-10, square_x_max+10, square_y_max+10))
-    cropped_img = cropped_img.resize((300, 300))
+    cropped_img = cropped_img.resize((512, 512))
     width = half_side_length*2+20
     start_x = center_x - half_side_length - 10
     start_y = center_y - half_side_length -10
@@ -848,7 +807,7 @@ def create_bitemporal_width_image(img_url, mark_points, DIR, index):
 
     # Crop the image to the square
     cropped_img = canvas.crop((square_x_min-10, square_y_min-10, square_x_max+10, square_y_max+10))
-    cropped_img = cropped_img.resize((300, 300))
+    cropped_img = cropped_img.resize((512, 512))
     width = half_side_length*2+20
     start_x = center_x - half_side_length - 10
     start_y = center_y - half_side_length -10
@@ -933,7 +892,7 @@ def create_ipsilateral_alar_angle_image(img_url, mark_points, DIR, index):
 
     # Crop the image to the square
     cropped_img = canvas.crop((square_x_min-10, square_y_min-10, square_x_max+10, square_y_max+10))
-    cropped_img = cropped_img.resize((300, 300))
+    cropped_img = cropped_img.resize((512, 512))
     width = half_side_length*2+20
     start_x = center_x - half_side_length - 10
     start_y = center_y - half_side_length -10
@@ -993,7 +952,7 @@ def create_medial_canthal_angle_image(img_url, mark_points, DIR, index):
 
     # Crop the image to the square
     cropped_img = canvas.crop((square_x_min-10, square_y_min-10, square_x_max+10, square_y_max+10))
-    cropped_img = cropped_img.resize((300, 300))
+    cropped_img = cropped_img.resize((512, 512))
     width = half_side_length*2+20
     start_x = center_x - half_side_length - 10
     start_y = center_y - half_side_length -10
@@ -1451,10 +1410,13 @@ def create_gonion_to_mouth_relationship_image(points, RLs, DIR, index, canvas):
     painter = ImageDraw.Draw(crop)
     points = RemakePointArrayBaseOnCrop(TL, W, points)
     RLs = RemakePointArrayBaseOnCrop(TL, W, RLs)
+    
+    # TEMP POINT
+    temp = getIntersection((points[46][0], getVertical(points[46][0], RLs[2])), RLs[2])
 
     dotLines = []
-    solidLines = []
-    drawPoints = [points[46][0], points[49][0]]
+    solidLines = [(points[46][0], temp)]
+    drawPoints = [points[46][0], points[49][0], temp]
     
     DrawReferenceLines(painter, RLs, RLIndexes)
     DrawDottedLines(painter,dotLines)
@@ -1473,10 +1435,13 @@ def create_recession_relative_to_frankfort_plane_image(points, RLs, DIR, index, 
     painter = ImageDraw.Draw(crop)
     points = RemakePointArrayBaseOnCrop(TL, W, points)
     RLs = RemakePointArrayBaseOnCrop(TL, W, RLs)
+    
+    # TEMP POINT
+    temp = getIntersection((points[35][0], getVertical(points[35][0], RLs[5])), RLs[5])
 
     dotLines = []
-    solidLines = []
-    drawPoints = [points[35][0], points[50][0]]
+    solidLines = [(points[35][0], temp)]
+    drawPoints = [points[35][0], points[50][0], temp]
     
     DrawReferenceLines(painter, RLs, RLIndexes)
     DrawDottedLines(painter,dotLines)
@@ -1552,7 +1517,7 @@ async def createReportImages(id, f_canvas, s_canvas, points, lines):
     create_midface_ratio_image(points, RLs, DIR, 11, f_canvas)
     create_eyebrow_position_ratio_image(points, RLs, DIR, 12, f_canvas)
     create_eye_spacing_ratio_image(points, RLs, DIR, 13, f_canvas)
-    create_eye_aspect_ratio_image(f_url, points, DIR, 14)
+    create_eye_aspect_ratio_image(points, RLs, DIR, 14, f_canvas)
     create_lower_lip_to_upper_lip_ratio_image(points, RLs, DIR, 15, f_canvas)
     create_deviation_of_iaa_image(f_url, points, DIR, 16)
     create_eyebrow_tilt_image(f_url, points, DIR, 17)

@@ -16,12 +16,12 @@ def GetCanva(url):
         return canva
     return None
 
-def GetAreaImage(canvas: Image, TL, BR, TARGET_SIZE = (300, 300)) -> Image:
+def GetAreaImage(canvas: Image, TL, BR, TARGET_SIZE = (512, 512)) -> Image:
     crop = canvas.crop((TL['x'], TL['y'], BR['x'], BR['y']))
     crop = crop.resize(TARGET_SIZE)
     return crop
 
-def RemakePointArrayBaseOnCrop(TL, W, points, TARGET_WIDTH = 300):
+def RemakePointArrayBaseOnCrop(TL, W, points, TARGET_WIDTH = 512):
     res_points = []
     for couple in points:
         res_couple = []
@@ -59,11 +59,12 @@ def GetFeatureArea(points, indexes, circular=False):
 
     C = getCenter(TL, BR)   # Center
     R = getDistance(C, TL)  # Radius
+    W = max(BR['x'] - TL['x'], BR['y'] - TL['y']) / 2 + 10
 
     if circular:
         return C, R
     else:
-        return getRectArea(C, R), R*2
+        return getRectArea(C, W), W*2
     
 def GetAreaImg(canvas: Image, TL, BR, TARGET_SIZE = (300, 300)) -> Image:
     crop = canvas.crop((TL['x'], TL['y'], BR['x'], BR['y']))
@@ -104,7 +105,7 @@ def DrawReferenceLines(painter:ImageDraw, RLs, indexes):
         ed = RLs[index][1]
         DrawInfiniteLine(painter, st, ed)
 
-def DrawDottedLine(painter, st, ed, space=10, color=(0, 255, 0), size=2):
+def DrawDottedLine(painter, st, ed, space=10, color=(0, 255, 0), size=1.5):
     delta_x = ed['x'] - st['x']
     delta_y = ed['y'] - st['y']
     length = (delta_x**2 + delta_y**2)**0.5
@@ -116,7 +117,7 @@ def DrawDottedLine(painter, st, ed, space=10, color=(0, 255, 0), size=2):
         y = st['y'] + i * step_y
         painter.ellipse((x-size, y-size, x+size, y+size), fill=color)
 
-def DrawSolidLine(painter, st, ed, color=(0, 255, 0), width=2):
+def DrawSolidLine(painter, st, ed, color=(0, 255, 0), width=3):
     st = (st['x'], st['y'])
     ed = (ed['x'], ed['y'])
     painter.line([st, ed], fill=color, width=width)
