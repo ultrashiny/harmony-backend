@@ -555,8 +555,9 @@ def create_eye_spacing_ratio_image(points, RLs, DIR, index, canvas):
     #TEMP POINTS
     c1 = getIntersection((points[9][0], getVertical(points[9][0], RLs[22])), RLs[22])
     c2 = getIntersection((points[9][1], getVertical(points[9][1], RLs[23])), RLs[23])
+    c3 = getIntersection((points[16][0], getVertical(points[16][0], RLs[19])), RLs[19])
 
-    dotLines    = [(points[16][0], points[16][1])]
+    dotLines    = [(points[16][0], c3)]
     solidLines  = [(points[9][0], c1),
                    (points[9][1], c2)]
     drawPoints  = [points[9][0], points[9][1],

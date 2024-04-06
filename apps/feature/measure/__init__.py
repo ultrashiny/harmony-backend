@@ -211,7 +211,7 @@ class MeasureFacialConvexityNasion(Measure):
         self.value = 180 - getAngle(a, b)
         self.thresholds = [0, 2, 1, -2, 3, -3, 0]
         self.minArray = [[163, 160, 158, 155, 152, 120], [161, 158, 156, 153, 152, 120]]
-        self.maxArray = [[179, 173, 175, 178, 181, 195], [179, 173, 175, 178, 181, 195]]
+        self.maxArray = [[170, 173, 175, 178, 181, 195], [170, 173, 175, 178, 181, 195]]
 
 class MeasureNasalProjection(Measure):
     def calc(self):
