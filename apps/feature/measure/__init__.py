@@ -312,16 +312,19 @@ class MeasureGonionMouthRelationship(Measure):
 
 class MeasureRecessionRelativeFrankfortPlane(Measure):
     def calc(self):
-        if getPosition(self.points[35][0], self.lines[5]):
+        # if getPosition(self.points[35][0], self.lines[5]):
+        #     self.value = "none"
+        # else:
+        d = getDistanceP2L(self.points[35][0], self.lines[5])
+        print(d)
+        if d <=2:
             self.value = "none"
+        elif d <= 4:
+            self.value = "slight"
+        elif d <= 8:
+            self.value = "moderate"
         else:
-            d = getDistanceP2L(self.points[35][0], self.lines[5])
-            if d <= 4:
-                self.value = "slight"
-            elif d <= 8:
-                self.value = "moderate"
-            else:
-                self.value = "extreme"
+            self.value = "extreme"
         self.thresholds = [0, 0, 0, 0, 0, 0, 0]
         self.array = ["none", "slight", "moderate", "extreme"]
 

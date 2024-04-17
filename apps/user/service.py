@@ -33,6 +33,8 @@ class UserService:
                         "subscription_id": user.subscription_id,
                         "first_name": user.first_name,
                         "last_name": user.last_name,
+                        "credit": user.credit,
+                        "auth": user.auth,
                     }
                 }
             )
@@ -61,11 +63,23 @@ class UserService:
             user = await UserService.get_user_by_id(data.user_id)
             if user:
                 user.subscription_id = subscription.id
-                user.credits += 5
+                user.credit += 5
                 await user.save()
             return user
         except Exception as e:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+        
+    @staticmethod
+    async def use_one_credit(id):
+        user = await UserService.get_user_by_id(id)
+        if user and user.credit > 0:
+            user.credit -= 1
+            await user.save()
+            return user
+        elif user.credit <= 0:
+            return {"message": "No credit remained to use."}
+        else:
+            return {"message": "User not found or invalid password."}
     
     @staticmethod
     async def authenticate(email: str, password: str) -> Optional[User]:

@@ -14,7 +14,7 @@ class UserOut(BaseModel):
     first_name: Optional[str]
     last_name: Optional[str]
     disabled: bool = False
-    credits: int = 0
+    credit: int = 0
     
 class UserSubscription(BaseModel):
     user_id: UUID
@@ -30,3 +30,9 @@ class UserUpdate(BaseModel):
     subscription_id: str
     first_name: str
     last_name: str
+    credit: int
+    auth: int
+    
+class UserPayload(BaseModel):
+    event: str
+    data: dict

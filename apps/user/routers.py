@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Header, Request, status
 
 from apps.user.deps import get_current_user
 from apps.user.models import User
-from .schemas import UserAuth, UserOut, UserSubscription, UserUpdate
+from .schemas import UserAuth, UserOut, UserPayload, UserSubscription, UserUpdate
 from .service import UserService
 import pymongo
 import stripe
@@ -59,7 +59,29 @@ async def cancel_subscription(subscription_id: str):
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     
-@user_router.post('/webhook')
-def webhook():
-    pass
+# @user_router.post('/webhook')
+# async def webhook(request: Request, stripe_signature: str = Header(None)):
+#     webhook_secret = os.environ["STRIPE_WEBHOOK_SECRET"]
+#     data = await request.body()
+#     try:
+#         event = stripe.Webhook.construct_event(
+#             payload=data,
+#             sig_header=stripe_signature,
+#             secret=webhook_secret
+#         )
+#         event_data = event['data']
+#     except Exception as e:
+#         return {"error": str(e)}
+
+#     event_type = event['type']
+#     if event_type == 'checkout.session.completed':
+#         print('checkout session completed')
+#     elif event_type == 'invoice.paid':
+#         print('invoice paid')
+#     elif event_type == 'invoice.payment_failed':
+#         print('invoice payment failed')
+#     else:
+#         print(f'unhandled event: {event_type}')
+    
+#     return {"status": "success"}
     

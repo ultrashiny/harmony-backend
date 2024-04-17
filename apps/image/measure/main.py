@@ -584,9 +584,9 @@ def create_eye_aspect_ratio_image(points, RLs, DIR, index, canvas):
 
     #TEMP POINTS
 
-    dotLines    = [(points[10][1], points[14][1]),
+    solidLines    = [(points[10][1], points[14][1]),
                    (points[10][0], points[14][0]),]
-    solidLines  = [(points[16][1], points[11][1]),
+    dotLines  = [(points[16][1], points[11][1]),
                    (points[16][0], points[11][0]),]
     drawPoints  = [points[10][0], points[10][1],
                    points[16][0], points[16][1],

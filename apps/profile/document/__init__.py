@@ -39,8 +39,8 @@ async def create_document(file_name: str, data: ProfileDownload):
     ws['C8'] = 195.5
     ws['C6'] = '=C7+C8'
     ws['B6'] = '=B7+B8'
-    ws['B7'] = '=SUM(J7:J28)'
-    ws['B8'] = '=SUM(S7:S29)'
+    ws['B7'] = '=SUM(J7:J29)'
+    ws['B8'] = '=SUM(S7:S28)'
     ws['D6'] = '=B6/C6*100'
     ws['D7'] = '=B7/C7*100'
     ws['D8'] = '=B8/C8*100'
@@ -52,10 +52,10 @@ async def create_document(file_name: str, data: ProfileDownload):
     for index, feature in enumerate(data.features):
         if index < 23:
             no = index
-            start_cell = 'P'
+            start_cell = 'G'
         else:
             no = index - 23
-            start_cell = 'G'
+            start_cell = 'P'
         ws[chr(ord(start_cell)) + str(7 + no)] = no + 1
         ws[chr(ord(start_cell) + 1) + str(7 + no)] = feature["name"]
         ws[chr(ord(start_cell) + 1) + str(7 + no)].hyperlink = feature["image"]

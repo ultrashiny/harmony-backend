@@ -8,6 +8,7 @@ class ProfileSave(BaseModel):
     gender: int
     race: int
     points: list[list]
+    date: str
 
 class ProfileDownload(BaseModel):
     id: UUID

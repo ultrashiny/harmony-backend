@@ -1,6 +1,8 @@
 from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 
+from apps.user.service import UserService
+
 from .service import ProfileService
 from apps.user.deps import get_current_user
 from apps.user.models import User
@@ -16,11 +18,10 @@ async def create_profile(data: ProfileSave,
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     
-    try:
-        user.use_one_credit()
+    if await UserService.use_one_credit(user.user_id):
         return await ProfileService.save(data)
-    except:
-        raise HTTPException(status_code=status.HTTP_402_PAYMENT_REQUIRED, detail="No credit remained")
+    else:
+        return {"message": "No credit remained to use."}
 
 @profile_router.get('/{user_id}', summary="Get all profiles of current user")
 async def get_profiles(user_id: UUID):

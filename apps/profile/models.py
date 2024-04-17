@@ -10,6 +10,7 @@ class Profile(Document):
     gender: int = Indexed(int)
     race: int = Indexed(int)
     points: list[list]
+    date: str
 
     def __repr__(self) -> str:
         return f"<Profile profile_id={self.profile_id}>"

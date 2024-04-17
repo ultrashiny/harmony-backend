@@ -24,6 +24,7 @@ class ProfileService:
                         "gender": data.gender,
                         "race": data.race,
                         "points": data.points,
+                        "date": data.date,
                     }
                 }
             )
@@ -35,7 +36,8 @@ class ProfileService:
                 name = data.name,
                 gender = data.gender,
                 race=data.race,
-                points=data.points
+                points=data.points,
+                date=data.date,
             )
             await profile_in.save()
             return profile_in

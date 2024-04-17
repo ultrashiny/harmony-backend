@@ -13,7 +13,8 @@ class User(Document):
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     disabled: Optional[bool] = False
-    credits: Optional[int] = 0
+    credit: Optional[int] = 0
+    auth: Optional[int] = 0
     
     def __repr__(self) -> str:
         return f"<User {self.email}>"
@@ -39,12 +40,15 @@ class User(Document):
     
     @classmethod
     async def use_one_credit(self) -> "User":
-        if self.credits and self.credits > 0:
-            self.credits -= 1
-            await self.save()
-            return self
+        print(self.credit)
+        if self.credit > 0:
+            await User.objects.filter(id=self.id, credit__gt=0).update_one(dec__credit=1)
+            # Refresh the instance to reflect the updated state
+            user = await User.objects.get(id=self.id)
+            return user
         else:
-            return ValueError("No credits left to use.")
+            return None
+
     
     class Settings:
         name = "users"
