@@ -179,9 +179,9 @@ class MeasureOrbitalVector(Measure):
         if distance <= 2:
             self.value = "neutral"
         else:
-            if position == 1:
-                self.value = "positive"
             if position == -1:
+                self.value = "positive"
+            if position == 1:
                 self.value = "negative"
         self.thresholds = [0, 0, 0, 0, 0, 0, 0]
         self.array = ["positive", "neutral", "negative"]     
@@ -242,7 +242,6 @@ class MeasureRickettsELine(Measure):
         else:
             a = getDistanceP2L(self.points[45][0], (self.points[40][0], self.points[50][0]))
             b = getDistanceP2L(self.points[47][0], (self.points[40][0], self.points[50][0]))
-            print(a, b, "****")
             r = a / b
             if r >= 1.5 and r <= 2.5:
                 self.value = "ideal"
@@ -312,19 +311,16 @@ class MeasureGonionMouthRelationship(Measure):
 
 class MeasureRecessionRelativeFrankfortPlane(Measure):
     def calc(self):
-        # if getPosition(self.points[35][0], self.lines[5]):
-        #     self.value = "none"
-        # else:
-        d = getDistanceP2L(self.points[35][0], self.lines[5])
-        print(d)
-        if d <=2:
+        if getPosition(self.points[35][0], self.lines[5]):
             self.value = "none"
-        elif d <= 4:
-            self.value = "slight"
-        elif d <= 8:
-            self.value = "moderate"
         else:
-            self.value = "extreme"
+            d = getDistanceP2L(self.points[35][0], self.lines[5])
+            if d <= 4:
+                self.value = "slight"
+            elif d <= 8:
+                self.value = "moderate"
+            else:
+                self.value = "extreme"
         self.thresholds = [0, 0, 0, 0, 0, 0, 0]
         self.array = ["none", "slight", "moderate", "extreme"]
 
@@ -535,7 +531,6 @@ class MeasureEyebrowTilt(Measure):
         a = getAngle((self.points[7][0], self.points[4][0]), self.lines[10])
         b = 180 - getAngle((self.points[7][1], self.points[4][1]), self.lines[10])
         self.value = (a + b) / 2
-        print(a, b)
         self.thresholds = [0, 0, 0, 0, 0, 0, 0]
         self.minArray = [[5, 3, 0, -2, -4, -15], [11, 9, 6, 4, 2, -15]]
         self.maxArray = [[13, 15, 18, 20, 22, 40], [18.7, 20.7, 23.7, 25.7, 27.7, 40]]

@@ -63,13 +63,15 @@ def getDistance(a, b):
     return math.sqrt(2 * (x**2 + y**2))
 
 def getPosition(p, l):
-    v = np.array([l[1]['x'] - l[0]['x'], l[1]['y'] - l[0]['y']])
+    l = list(l)
+    l.sort(key=lambda point: point['y'])
+    v = np.array([l[0]['x'] - l[1]['x'], l[0]['y'] - l[1]['y']])
     w = np.array([p['x'] - l[0]['x'], p['y'] - l[0]['y']])
     cross_product = np.cross(v, w)
     if cross_product > 0:
-        return -1
-    elif cross_product < 0:
         return 1
+    elif cross_product < 0:
+        return -1
     else:
         return 0
     
@@ -110,7 +112,6 @@ def applyFormat(points_array):
     for points in points_array:
         temp_points = []
         for point in points:
-            print(point)
             temp = {}
             temp['x'] = point[0]
             temp['y'] = point[1]

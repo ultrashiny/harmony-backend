@@ -40,7 +40,6 @@ class User(Document):
     
     @classmethod
     async def use_one_credit(self) -> "User":
-        print(self.credit)
         if self.credit > 0:
             await User.objects.filter(id=self.id, credit__gt=0).update_one(dec__credit=1)
             # Refresh the instance to reflect the updated state
