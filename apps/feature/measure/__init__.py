@@ -1,4 +1,4 @@
-from apps.math import getAngle, getCenter, getDistance, getDistanceP2L, getIntersection, getPosition, getVertical
+from apps.math import angle_between_lines, getAngle, getCenter, getDistance, getDistanceP2L, getIntersection, getPosition, getVertical
 
 features = [
     "EyeSeparationRatio",
@@ -328,7 +328,7 @@ class MeasureBrowridgeInclinationAngle(Measure):
     def calc(self):
         a = (self.lines[7][0], self.lines[7][1])
         b = (self.points[32][0], self.points[31][0])
-        self.value = 180 - getAngle(a, b)
+        self.value = angle_between_lines(a, b)
         self.thresholds = [0, 0, 0, 0, 0, 0, 0]
         self.minArray = [[13, 10, 8, 6, 4, 2, 0], [10, 7, 5, 3, 1, 1, 0]]
         self.maxArray = [[24, 27, 29, 31, 33, 36, 45], [22, 25, 27, 29, 31, 39, 45]]

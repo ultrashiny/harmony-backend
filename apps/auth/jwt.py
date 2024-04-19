@@ -28,12 +28,12 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()) -> Any:
         "refresh_token": create_refresh_token(user.user_id),
     }
 
-@auth_router.get('/', summary="Get current user")
+@auth_router.post('/', summary="Get current user")
 async def test_token(user: User = Depends(get_current_user)):
     return user
 
-@auth_router.get('/{auth_token}', summary="Get user from token", response_model=UserOut)
-async def get_user(auth_token):
+@auth_router.get('/{auth_token}', summary="Get user from token")
+async def getUser(auth_token):
     return get_user(auth_token)
 
 @auth_router.post('/refresh', summary="Refresh expired access token with refresh token", response_model=TokenSchema)

@@ -57,6 +57,21 @@ def getAngle(a, b):
         angle = angle - 180
     return angle
 
+def angle_between_lines(a, b):
+    print(a, b)
+    vector1 = np.array([a[1]['x']-a[0]['x'], a[1]['y']-a[0]['y']])
+    vector2 = np.array([b[1]['x']-b[0]['x'], b[1]['y']-b[0]['y']])
+    print(vector1, vector2)
+    dot_product = np.dot(vector1, vector2)
+    print(dot_product)
+    magnitude1 = np.linalg.norm(vector1)
+    magnitude2 = np.linalg.norm(vector2)
+    cosine_angle = dot_product / (magnitude1 * magnitude2)
+    angle_radians = np.arccos(np.clip(cosine_angle, -1.0, 1.0))
+    angle_degrees = np.degrees(angle_radians)
+    
+    return angle_degrees
+
 def getDistance(a, b):
     x = a['x'] - b['x']
     y = a['y'] - b['y']
