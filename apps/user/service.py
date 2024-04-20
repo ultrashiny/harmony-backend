@@ -98,6 +98,11 @@ class UserService:
         return user
     
     @staticmethod
+    async def get_user_by_customer_id(customer_id: str) -> Optional[User]:
+        user = await User.find_one(User.customer_id == customer_id)
+        return user
+    
+    @staticmethod
     async def get_user_by_id(id: UUID) -> Optional[User]:
         user = await User.find_one(User.user_id == id)
         return user

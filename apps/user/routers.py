@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Header, Request, status
+from fastapi.responses import JSONResponse
 
 from apps.user.deps import get_current_user
 from apps.user.models import User
@@ -59,29 +60,51 @@ async def cancel_subscription(subscription_id: str):
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     
-# @user_router.post('/webhook')
-# async def webhook(request: Request, stripe_signature: str = Header(None)):
-#     webhook_secret = os.environ["STRIPE_WEBHOOK_SECRET"]
-#     data = await request.body()
-#     try:
-#         event = stripe.Webhook.construct_event(
-#             payload=data,
-#             sig_header=stripe_signature,
-#             secret=webhook_secret
-#         )
-#         event_data = event['data']
-#     except Exception as e:
-#         return {"error": str(e)}
+@user_router.post('/webhook')
+async def webhook(request: Request):
+    webhook_secret = os.environ["STRIPE_WEBHOOK_SECRET"]
+    payload = await request.body()
+    sig_header = request.headers.get('stripe-signature')
 
-#     event_type = event['type']
-#     if event_type == 'checkout.session.completed':
-#         print('checkout session completed')
-#     elif event_type == 'invoice.paid':
-#         print('invoice paid')
-#     elif event_type == 'invoice.payment_failed':
-#         print('invoice payment failed')
-#     else:
-#         print(f'unhandled event: {event_type}')
-    
-#     return {"status": "success"}
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, webhook_secret
+        )
+    except ValueError:
+        # Invalid payload
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"message": "Invalid payload"})
+    except stripe.error.SignatureVerificationError:
+        # Invalid signature
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"message": "Invalid signature"})
+
+    # Handle the event
+    if event['type'] == 'invoice.payment_succeeded':
+        invoice = event['data']['object']
+        customer_id = invoice['customer']  # Get the customer ID from the invoice object
+        customer = stripe.Customer.retrieve(customer_id)  # Retrieve customer information
+        user = await UserService.get_user_by_customer_id(customer_id)  # Retrieve user based on customer ID
+
+        # Retrieve subscription and product details as previously
+        subscription_id = invoice['subscription']
+        subscription = stripe.Subscription.retrieve(subscription_id)
+        product_id = subscription['plan']['product']
+        product = stripe.Product.retrieve(product_id)
+        
+        # Check product type and perform actions
+        if product['name'].lower() == 'premium':
+            user.auth = 1
+            user.credit += 5
+            print(f"Premium product charge succeeded for customer {customer['email']} or {customer['name']}.")
+        elif product['name'].lower() == 'platinum':
+            user.auth = 2
+            user.credit += 30
+            print(f"Platinum product charge succeeded for customer {customer['email']} or {customer['name']}.")
+        else:
+            print(f"Other product charge succeeded for customer {customer['email']} or {customer['name']}.")
+
+        await user.save()
+        # Optionally, you can handle more customer details here
+        print(f"Customer Details: Email={customer.get('email', 'Not provided')}, Name={customer.get('name', 'Anonymous')}")
+
+    return JSONResponse(status_code=status.HTTP_200_OK, content={"message": "Received"})
     
