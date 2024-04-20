@@ -62,6 +62,7 @@ async def cancel_subscription(subscription_id: str):
     
 @user_router.post('/webhook')
 async def webhook(request: Request):
+    print("Received Stripe webhook event")
     webhook_secret = os.environ["STRIPE_WEBHOOK_SECRET"]
     payload = await request.body()
     sig_header = request.headers.get('stripe-signature')
@@ -94,11 +95,13 @@ async def webhook(request: Request):
         if product['name'].lower() == 'premium':
             user.auth = 1
             user.credit += 5
+            user.subscription_id = subscription_id
             print(f"Premium product charge succeeded for customer {customer['email']} or {customer['name']}.")
-        elif product['name'].lower() == 'platinum':
+        elif product['name'].lower() == 'plantium':
             user.auth = 2
             user.credit += 30
-            print(f"Platinum product charge succeeded for customer {customer['email']} or {customer['name']}.")
+            user.subscription_id = subscription_id
+            print(f"Plantium product charge succeeded for customer {customer['email']} or {customer['name']}.")
         else:
             print(f"Other product charge succeeded for customer {customer['email']} or {customer['name']}.")
 
