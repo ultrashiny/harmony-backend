@@ -386,8 +386,8 @@ class MeasureLateralCanthalTilt(Measure):
         b0 = (self.points[16][0], self.points[11][0])
         a1 = (self.lines[16][0], self.lines[16][1])
         b1 = (self.points[11][1], self.points[16][1])
-        l = 180 - getAngle(a0, b0)
-        r = getAngle(a1, b1)
+        l = min(180 - getAngle(a0, b0), getAngle(a0, b0))
+        r = min(getAngle(a1, b1), 180 - getAngle(a1, b1))
         self.value = (l + r) / 2
         self.thresholds = [0, 1.5, 2, 0, 0, 0, 0]
         self.minArray = [[5.2, 4, 3, 0, -2, -4, -10], [6, 4.8, 3.6, 1.5, 0, -3, -10]]

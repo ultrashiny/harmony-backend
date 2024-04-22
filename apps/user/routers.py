@@ -17,13 +17,27 @@ stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 user_router = APIRouter()
 @user_router.post('/create', summary="Create a new user", response_model=User)
 async def create_user(data: UserAuth):
+    if not data.username or not data.email or not data.password:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Username, email, and password are required."
+        )
+    existing_user = await UserService.get_user_by_email(email=data.email)
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="User with this email already exists"
+        )
+        
     try:
-        return await UserService.create_user(data)
-    except pymongo.errors.DuplicateKeyError:
+        new_user = await UserService.create_user(data)
+    except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, 
             detail="Username or email already exists."
         )
+        
+    return new_user
 
 @user_router.post('/update', summary="Update a user")
 async def update_user(data: UserUpdate):

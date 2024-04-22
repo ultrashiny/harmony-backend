@@ -5,8 +5,8 @@ from typing import Optional
 
 class User(Document):
     user_id: UUID = Field(default_factory=uuid4)
-    username: str = Indexed(str, unique=True)
-    email: EmailStr = Indexed(EmailStr, unique=True)
+    username: str = Indexed(unique=True)
+    email: EmailStr = Indexed(unique=True)
     hashed_password: str
     customer_id: Optional[str] = None
     subscription_id: Optional[str] = None
@@ -46,6 +46,13 @@ class User(Document):
             user = await User.objects.get(id=self.id)
             return user
         else:
+            return None
+    
+    @classmethod
+    async def get_or_none(cls, **kwargs) -> Optional['User']:
+        try:
+            return await cls.find_one(**kwargs)
+        except Exception:
             return None
 
     

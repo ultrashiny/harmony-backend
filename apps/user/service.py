@@ -10,14 +10,26 @@ import stripe
 class UserService:
     @staticmethod
     async def create_user(user: UserAuth):
+        # Check if the email already exists
+        existing_user = await User.get_or_none(email=user.email)
+        if existing_user:
+            raise ValueError("User with this email already exists")
+
+        # Create a new user
+        try:
+            stripe_customer = stripe.Customer.create(email=user.email)
+        except stripe.error.StripeError as e:
+            raise ValueError(f"Error creating customer in Stripe: {str(e)}")
+
         user_in = User(
             username=user.username,
             email=user.email,
             hashed_password=get_password(user.password),
-            customer_id=stripe.Customer.create(email = user.email)["id"]
+            customer_id=stripe_customer["id"]
         )
         await user_in.save()
         return user_in
+
     
     @staticmethod
     async def update_user(user: UserUpdate):
