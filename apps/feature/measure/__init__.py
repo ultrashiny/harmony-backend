@@ -1,4 +1,4 @@
-from apps.math import angle_between_lines, getAngle, getCenter, getDistance, getDistanceP2L, getIntersection, getPosition, getVertical
+from apps.math import angle_between_lines, angle_from_points, getAngle, getCenter, getDistance, getDistanceP2L, getIntersection, getPosition, getVertical
 
 features = [
     "EyeSeparationRatio",
@@ -138,7 +138,7 @@ class MeasureFacialConvexityGlabella(Measure):
     def calc(self):
         a = (self.points[32][0], self.points[43][0])
         b = (self.points[50][0], self.points[43][0])
-        self.value = 180 - getAngle(a, b)
+        self.value = angle_from_points(self.points[32][0], self.points[43][0], self.points[50][0])
         self.thresholds = [0, 2, 1, -2, 3, -3, 0]
         self.minArray = [[168, 161, 163, 160, 155, 140], [166, 163, 161, 159, 155, 140]]
         self.maxArray = [[176, 179, 181, 183, 184, 195], [175, 178, 180, 182, 184, 195]]
@@ -190,7 +190,7 @@ class MeasureTotalFacialConvexity(Measure):
     def calc(self):
         a = (self.points[32][0], self.points[40][0])
         b = (self.points[50][0], self.points[40][0])
-        self.value = 180 - getAngle(a, b)
+        self.value = angle_from_points(self.points[32][0], self.points[40][0], self.points[50][0])
         self.thresholds = [0, 5, 4, -1, 2, -3, 0]
         self.minArray = [[137.5, 135.5, 132.5, 129.5, 126.5, 124.5, 100],[137.5, 135.5, 132.5, 129.5, 126.5, 124.5, 100]]
         self.maxArray = [[148.5, 150.5, 153.5, 156.5, 159.5, 161.5, 180],[148.5, 150.5, 153.5, 156.5, 159.5, 161.5, 180]]
@@ -208,7 +208,7 @@ class MeasureFacialConvexityNasion(Measure):
     def calc(self):
         a = (self.points[35][0], self.points[43][0])
         b = (self.points[50][0], self.points[43][0])
-        self.value = 180 - getAngle(a, b)
+        self.value = angle_from_points(self.points[35][0], self.points[43][0], self.points[50][0])
         self.thresholds = [0, 2, 1, -2, 3, -3, 0]
         self.minArray = [[163, 160, 158, 155, 152, 120], [161, 158, 156, 153, 152, 120]]
         self.maxArray = [[170, 173, 175, 178, 181, 195], [170, 173, 175, 178, 181, 195]]

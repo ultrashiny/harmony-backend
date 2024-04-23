@@ -58,7 +58,6 @@ def getAngle(a, b):
     return angle
 
 def angle_between_lines(a, b):
-    print(a, b)
     vector1 = np.array([a[1]['x']-a[0]['x'], a[1]['y']-a[0]['y']])
     vector2 = np.array([b[1]['x']-b[0]['x'], b[1]['y']-b[0]['y']])
     print(vector1, vector2)
@@ -70,6 +69,43 @@ def angle_between_lines(a, b):
     angle_radians = np.arccos(np.clip(cosine_angle, -1.0, 1.0))
     angle_degrees = np.degrees(angle_radians)
     
+    return angle_degrees
+
+def angle_from_points(a, b, c):
+    """
+    Calculates the angle at point `b` formed by points `a`, `b`, and `c`.
+    The angle returned is in the range [0, 360) degrees.
+
+    Args:
+    a, b, c: Coordinates of the points, where each is a tuple (x, y).
+
+    Returns:
+    float: angle in degrees.
+    """
+    
+    # Convert points to numpy arrays for vector operations
+    ba = np.array([a['x'] - b['x'], a['y'] - b['y']])
+    bc = np.array([c['x'] - b['x'], c['y'] - b['y']])
+    
+    # Calculate dot product and magnitudes of vectors ba and bc
+    dot_product = np.dot(ba, bc)
+    magnitude_ba = np.linalg.norm(ba)
+    magnitude_bc = np.linalg.norm(bc)
+    
+    # Calculate the angle in radians between the two vectors
+    cosine_angle = dot_product / (magnitude_ba * magnitude_bc)
+    angle_radians = np.arccos(np.clip(cosine_angle, -1.0, 1.0))
+    
+    # Convert the angle to degrees
+    angle_degrees = np.degrees(angle_radians)
+    
+    # Determine the direction of the angle using the cross product in 2D
+    cross_product = np.cross(ba, bc)
+    
+    # If the cross product is negative, the angle is above 180 degrees
+    if cross_product < 0:
+        angle_degrees = 360 - angle_degrees
+
     return angle_degrees
 
 def getDistance(a, b):
