@@ -39,69 +39,70 @@ def getLandmarksUsingMP(imgPath, IndexList, Landmarks):
     imgRGB = cv2.cvtColor(imgBGR, cv2.COLOR_BGR2RGB)
     height, width, _ = imgRGB.shape
     mp_face_mesh = mp.solutions.face_mesh
-    with mp_face_mesh.FaceMesh(static_image_mode=True, max_num_faces=1, refine_landmarks=True, min_detection_confidence=0.9) as face_mesh:
+    with mp_face_mesh.FaceMesh(static_image_mode=True, max_num_faces=1, refine_landmarks=True, min_detection_confidence=0.7) as face_mesh:
         faces = face_mesh.process(imgRGB)
-        for face in faces.multi_face_landmarks:
-            for index in range(len(IndexList)):
-                Landmarks[IndexList[index][1], IndexList[index][2], 0] = int(face.landmark[IndexList[index][0]].x*width)
-                Landmarks[IndexList[index][1], IndexList[index][2], 1] = int(face.landmark[IndexList[index][0]].y*height)
-            Landmarks[3, 0, 0] = int(face.landmark[105].x*width)
-            Landmarks[3, 0, 1] = int((face.landmark[105].y - DELTA)*height)
-            Landmarks[4, 0, 0] = int(face.landmark[105].x*width)
-            Landmarks[4, 0, 1] = int((face.landmark[105].y + DELTA)*height)
-            Landmarks[3, 1, 0] = int(face.landmark[334].x*width)
-            Landmarks[3, 1, 1] = int((face.landmark[334].y - DELTA)*height)
-            Landmarks[4, 1, 0] = int(face.landmark[334].x*width)
-            Landmarks[4, 1, 1] = int((face.landmark[334].y + DELTA)*height)
-            Landmarks[7, 0, 0] = int(face.landmark[55].x*width)
-            Landmarks[7, 0, 1] = int((face.landmark[55].y - DELTA)*height)
-            Landmarks[8, 0, 0] = int(face.landmark[55].x*width)
-            Landmarks[8, 0, 1] = int((face.landmark[55].y + DELTA)*height)
-            Landmarks[7, 1, 0] = int(face.landmark[285].x*width)
-            Landmarks[7, 1, 1] = int((face.landmark[285].y - DELTA)*height)
-            Landmarks[8, 1, 0] = int(face.landmark[285].x*width)
-            Landmarks[8, 1, 1] = int((face.landmark[285].y + DELTA)*height)
+        if faces.multi_face_landmarks:
+            for face in faces.multi_face_landmarks:
+                for index in range(len(IndexList)):
+                    Landmarks[IndexList[index][1], IndexList[index][2], 0] = int(face.landmark[IndexList[index][0]].x*width)
+                    Landmarks[IndexList[index][1], IndexList[index][2], 1] = int(face.landmark[IndexList[index][0]].y*height)
+                Landmarks[3, 0, 0] = int(face.landmark[105].x*width)
+                Landmarks[3, 0, 1] = int((face.landmark[105].y - DELTA)*height)
+                Landmarks[4, 0, 0] = int(face.landmark[105].x*width)
+                Landmarks[4, 0, 1] = int((face.landmark[105].y + DELTA)*height)
+                Landmarks[3, 1, 0] = int(face.landmark[334].x*width)
+                Landmarks[3, 1, 1] = int((face.landmark[334].y - DELTA)*height)
+                Landmarks[4, 1, 0] = int(face.landmark[334].x*width)
+                Landmarks[4, 1, 1] = int((face.landmark[334].y + DELTA)*height)
+                Landmarks[7, 0, 0] = int(face.landmark[55].x*width)
+                Landmarks[7, 0, 1] = int((face.landmark[55].y - DELTA)*height)
+                Landmarks[8, 0, 0] = int(face.landmark[55].x*width)
+                Landmarks[8, 0, 1] = int((face.landmark[55].y + DELTA)*height)
+                Landmarks[7, 1, 0] = int(face.landmark[285].x*width)
+                Landmarks[7, 1, 1] = int((face.landmark[285].y - DELTA)*height)
+                Landmarks[8, 1, 0] = int(face.landmark[285].x*width)
+                Landmarks[8, 1, 1] = int((face.landmark[285].y + DELTA)*height)
 
-            A = getIntersection(
-                (
-                    {
-                        'x': face.landmark[207].x*width,
-                        'y': face.landmark[207].y*height,
-                    },{
-                        'x':face.landmark[135].x*width,
-                        'y':face.landmark[135].y*height,
-                    }
-                ),(
-                    {
-                        'x': face.landmark[152].x*width,
-                        'y': face.landmark[152].y*height,
-                    },{
-                        'x':face.landmark[149].x*width,
-                        'y':face.landmark[149].y*height
-                    }
-                ))
-            Landmarks[27, 0, 0] = A['x']
-            Landmarks[27, 0, 1] = A['y']
-            B = getIntersection(
-                (
-                    {
-                        'x': face.landmark[433].x*width,
-                        'y': face.landmark[433].y*height,
-                    },{
-                        'x': face.landmark[397].x*width,
-                        'y': face.landmark[397].y*height
-                    }
-                ),(
-                    {
-                        'x': face.landmark[152].x*width,
-                        'y': face.landmark[152].y*height,
-                    },{
-                        'x': face.landmark[378].x*width,
-                        'y': face.landmark[378].y*height
-                    }
-                ))
-            Landmarks[27, 1, 0] = B['x'] 
-            Landmarks[27, 1, 1] = B['y']
+                A = getIntersection(
+                    (
+                        {
+                            'x': face.landmark[207].x*width,
+                            'y': face.landmark[207].y*height,
+                        },{
+                            'x':face.landmark[135].x*width,
+                            'y':face.landmark[135].y*height,
+                        }
+                    ),(
+                        {
+                            'x': face.landmark[152].x*width,
+                            'y': face.landmark[152].y*height,
+                        },{
+                            'x':face.landmark[149].x*width,
+                            'y':face.landmark[149].y*height
+                        }
+                    ))
+                Landmarks[27, 0, 0] = A['x']
+                Landmarks[27, 0, 1] = A['y']
+                B = getIntersection(
+                    (
+                        {
+                            'x': face.landmark[433].x*width,
+                            'y': face.landmark[433].y*height,
+                        },{
+                            'x': face.landmark[397].x*width,
+                            'y': face.landmark[397].y*height
+                        }
+                    ),(
+                        {
+                            'x': face.landmark[152].x*width,
+                            'y': face.landmark[152].y*height,
+                        },{
+                            'x': face.landmark[378].x*width,
+                            'y': face.landmark[378].y*height
+                        }
+                    ))
+                Landmarks[27, 1, 0] = B['x'] 
+                Landmarks[27, 1, 1] = B['y']
     return Landmarks
 
 def getProfileLandmarks(imgPath):

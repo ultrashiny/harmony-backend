@@ -39,4 +39,8 @@ async def get_feature_image(id: str, index: int):
 @img_router.get('/{id}/{direction}', summary="Get one profile image")
 async def get_profile_image(id: str, direction: str):
     img_path = f"./UPLOADS/{id}/{direction}.jpg"
+    path_obj = Path(img_path)
+    if not path_obj.exists():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"You need to upload the images")
+    
     return FileResponse(img_path, media_type="image/jpeg")

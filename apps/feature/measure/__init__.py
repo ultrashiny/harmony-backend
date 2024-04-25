@@ -89,13 +89,21 @@ class Measure:
                 min = self.minArray[self.gender][i] + self.thresholds[self.race]
                 max = self.maxArray[self.gender][i] + self.thresholds[self.race]
                 if self.value >= min and self.value <= max:
-                    return i
+                    if i == 0:
+                        # return i, 0
+                        return i
+                    else:
+                        # return i, 0 if self.value <= (self.minArray[self.gender][i - 1] + self.thresholds[self.race]) else 1,
+                        return i
+            # return i, 0 if self.value <= (self.minArray[self.gender][i - 1] + self.thresholds[self.race]) else 1,
             return i
         else:
             self.ideal = self.array[0]
             for i in range(len(self.array)):
                 if self.value == self.array[i]:
+                    # return i, 0
                     return i
+            # return i, 0
             return i
     
 class MeasureGonialAngle(Measure):
@@ -359,7 +367,7 @@ class MeasureFacialThirds(Measure):
         s = a + b + c
         self.value = [x * 100 for x in [a/s, b/s, c/s]]
         self.thresholds = [0, 1, -0.7, 0, 0, 0, 0]
-        self.minArray = [[[31.5, 30.5, 29, 26.5, 25, 24, 18],[31.5, 31, 29.5, 29.5, 28, 27, 18]],
+        self.minArray = [[[31.5, 30.5, 29, 26.5, 25, 24, 18],[31.5, 31, 29.5, 28.5, 28, 27, 18]],
                          [[29.5, 28, 26.5, 25, 23.5, 22.5, 18],[30, 29.5, 27, 25, 24, 23, 18]]]
         self.maxArray = [[[34.5, 35.5, 37, 39.5, 41, 42, 50],[34.5, 35, 36.5, 37.5, 38, 39, 50]],
                          [[36.5, 38, 39.5, 41, 42.5, 43.5, 50],[36, 37.5, 39, 41, 42, 43, 50]]]
@@ -368,16 +376,20 @@ class MeasureFacialThirds(Measure):
         if self.gender == 0: # Male
             self.ideal = f"{self.minArray[self.value[2] == max(self.value)][self.gender][0] + self.thresholds[self.race]} - "
             self.ideal += f"{self.maxArray[self.value[2] == max(self.value)][self.gender][0] + self.thresholds[self.race]}"
-            for i in range(len(self.minArray)):
+            for i in range(len(self.minArray[0][0])):
                 if all(x > self.minArray[self.value[2] == max(self.value)][self.gender][i] + self.thresholds[self.race] and x < self.maxArray[self.value[2] == max(self.value)][self.gender][i] + self.thresholds[self.race] for x in self.value):
+                    # return i, 0
                     return i
+            # return i, 0
             return i
         else:
             self.ideal = f"{self.minArray[self.value[2] != max(self.value)][self.gender][0] + self.thresholds[self.race]} - "
             self.ideal += f"{self.maxArray[self.value[2] != max(self.value)][self.gender][0] + self.thresholds[self.race]}"
-            for i in range(len(self.minArray)):
+            for i in range(len(self.minArray[0][0])):
                 if all(x > self.minArray[self.value[2] != max(self.value)][self.gender][i] + self.thresholds[self.race] and x < self.maxArray[self.value[2] != max(self.value)][self.gender][i] + self.thresholds[self.race] for x in self.value):
+                    # return i, 0
                     return i
+            # return i, 0
             return i
 
 class MeasureLateralCanthalTilt(Measure):

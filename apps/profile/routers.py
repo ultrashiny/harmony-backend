@@ -22,6 +22,13 @@ async def create_profile(data: ProfileSave,
         return await ProfileService.save(data)
     else:
         return {"message": "No credit remained to use."}
+    
+@profile_router.delete('/{profile_id}', summary="Delete one profile")
+async def delete_profile(profile_id: UUID,
+                         user: User = Depends(get_current_user)):
+    if not user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
+    return {"message": "No credit remained to use."}
 
 @profile_router.get('/{user_id}', summary="Get all profiles of current user")
 async def get_profiles(user_id: UUID):
