@@ -113,9 +113,12 @@ def getDistance(a, b):
     y = a['y'] - b['y']
     return math.sqrt(2 * (x**2 + y**2))
 
-def getPosition(p, l):
+def getPosition(p, l, flag=True):
     l = list(l)
-    l.sort(key=lambda point: point['y'])
+    if flag:
+        l.sort(key=lambda point: point['y'])
+    else:
+        l.sort(key=lambda point: point['x'])
     v = np.array([l[0]['x'] - l[1]['x'], l[0]['y'] - l[1]['y']])
     w = np.array([p['x'] - l[0]['x'], p['y'] - l[0]['y']])
     cross_product = np.cross(v, w)

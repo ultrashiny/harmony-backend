@@ -313,13 +313,20 @@ class MeasureNasomentalAngle(Measure):
 
 class MeasureGonionMouthRelationship(Measure):
     def calc(self):
-        self.value = "below"
+        if getDistanceP2L(self.points[46][0], self.lines[2]) <= 2:
+            self.value = "in line"
+        else:
+            if getPosition(self.points[46][0], self.lines[2], False):
+                self.value = "below"
+            else:
+                self.value = "above"
+        # self.value = "below"
         self.thresholds = [0, 0, 0, 0, 0, 0, 0]
         self.array = ["below", "in line", "above", "notably above"]
 
 class MeasureRecessionRelativeFrankfortPlane(Measure):
     def calc(self):
-        if getPosition(self.points[35][0], self.lines[5]):
+        if getPosition(self.points[35][0], self.lines[5]) != -1:
             self.value = "none"
         else:
             d = getDistanceP2L(self.points[35][0], self.lines[5])
