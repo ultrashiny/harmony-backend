@@ -3,8 +3,6 @@ from pathlib import Path
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from fastapi.responses import FileResponse
 
-from apps.user.deps import get_current_user
-from apps.user.models import User
 from .service import ImageService
 from .schemas import ImageFeatures
 
@@ -36,6 +34,24 @@ async def get_feature_image(id: str, index: int):
     img_path = f"./GENERATES/{id}/{index}.jpg"
     return FileResponse(img_path, media_type="image/jpeg")
 
+@img_router.get('/mask/{id}', summary="Get one mask image")
+async def get_mask_image(id: str):
+    img_path = f"./UPLOADS/{id}/mask.jpg"
+    path_obj = Path(img_path)
+    if not path_obj.exists():
+        await ImageService.generate_mask(id)
+    
+    return FileResponse(img_path, media_type="image/jpeg")
+
+@img_router.get('/canny/{id}', summary="Get one canny image")
+async def get_canny_image(id: str):
+    img_path = f"./UPLOADS/{id}/canny.jpg"
+    path_obj = Path(img_path)
+    if not path_obj.exists():
+        await ImageService.generate_canny(id)
+        
+    return FileResponse(img_path, media_type="image/jpeg")
+    
 @img_router.get('/{id}/{direction}', summary="Get one profile image")
 async def get_profile_image(id: str, direction: str):
     img_path = f"./UPLOADS/{id}/{direction}.jpg"
