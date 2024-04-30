@@ -74,7 +74,7 @@ class ImageService:
                     direction = point - centroid
                     norm = np.linalg.norm(direction)
                     normalized_direction = direction / norm
-                    new_point = point + normalized_direction * 50
+                    new_point = point + normalized_direction * 20
                     expanded_hull.append(new_point)
                     
                 expanded_hull = np.array(expanded_hull, dtype=np.int32)
