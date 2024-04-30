@@ -67,7 +67,7 @@ class ImageService:
                 landmarks = np.array(landmarks, dtype=np.int32)
                 hull = cv2.convexHull(landmarks)
                 
-                centroid = np.mean(landmarks, axis=0)
+                centroid = np.mean(hull, axis=0)
                 
                 expanded_hull = []
                 for point in hull:
@@ -79,11 +79,13 @@ class ImageService:
                     
                 expanded_hull = np.array(expanded_hull, dtype=np.int32)
                 
-                mask = np.zeros(image.shape[:2], dtype=np.int32)
-                cv2.fillPoly(mask, [expanded_hull], 255)
+                mask = np.ones(image.shape[:2], dtype=np.int8)
+                cv2.fillPoly(mask, [expanded_hull], 0)
+                
+                masked_image = cv2.bitwise_and(image, image, mask=mask)
                 
                 mask_url = f"./UPLOADS/{id}/mask.jpg"
-                cv2.imwrite(mask_url, mask)
+                cv2.imwrite(mask_url, masked_image)
         
     @staticmethod
     async def generate_canny(id: str):
