@@ -79,8 +79,8 @@ class ImageService:
                     
                 expanded_hull = np.array(expanded_hull, dtype=np.int32)
                 
-                mask = np.zeros(image.shape[:2], dtype=np.int8)
-                cv2.fillPoly(mask, [expanded_hull], 256)
+                mask = np.zeros(image.shape[:2], dtype=np.uint8)
+                cv2.fillPoly(mask, [expanded_hull], 255)
                 
                 # masked_image = cv2.bitwise_and(image, image, mask=mask)
                 
