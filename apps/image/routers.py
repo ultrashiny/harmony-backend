@@ -38,8 +38,8 @@ async def get_feature_image(id: str, index: int):
 async def get_mask_image(id: str):
     img_path = f"./UPLOADS/{id}/mask.jpg"
     path_obj = Path(img_path)
-    if not path_obj.exists():
-        await ImageService.generate_mask(id)
+    # if not path_obj.exists():
+    await ImageService.generate_mask(id)
     
     return FileResponse(img_path, media_type="image/jpeg")
 
@@ -47,8 +47,8 @@ async def get_mask_image(id: str):
 async def get_canny_image(id: str):
     img_path = f"./UPLOADS/{id}/canny.jpg"
     path_obj = Path(img_path)
-    if not path_obj.exists():
-        await ImageService.generate_canny(id)
+    # if not path_obj.exists():
+    await ImageService.generate_canny(id)
         
     return FileResponse(img_path, media_type="image/jpeg")
     
