@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from fastapi.responses import FileResponse
+import requests
 
 from .service import ImageService
 from .schemas import ImageFeatures
@@ -51,6 +52,55 @@ async def get_canny_image(id: str):
     await ImageService.generate_canny(id)
         
     return FileResponse(img_path, media_type="image/jpeg")
+
+@img_router.get('/ideal/{id}', summary="Get idealized faces")
+async def get_idealize_image(id: str):
+    url = "https://modelslab.com/api/v1/enterprise/controlnet"
+    payload = json.dumps({
+        "key": "u1rtaxxctmrwp1",
+        "model_id": "realistic-vision-v51",
+        "init_image": f"https://harmonyapp.ai/api/img/{id}/f",
+        "mask_image": f"https://harmonyapp.ai/api/img/mask/{id}",
+        "control_image": f"https://harmonyapp.ai/api/img/{id}/f",
+        "width": "512",
+        "height": "512",
+        "prompt": "8K, HD, realistic raw photo, white, male, sexy, most handsome, most attractive, best quality skin, masterpiece, best quality, sharp focus, natural lighting, shadow, (((photorealistic))), octane render, HDR, 8k, high contrast , Canon EOS R3, nikon, f/1.4, ISO 200, 1/160s, 8K, RAW, unedited, symmetrical balance, in-frame, 8K, ((no make up))",
+        "guess_mode": None,
+        "use_karras_sigmas": None,
+        "algorithm_type": None,
+        "safety_checker_type": "no",
+        "tomesd": "no",
+        "vae": None,
+        "embeddings": "epicrealism",
+        "embeddings_model": "epicrealism",
+        "upscale": None,
+        "instant_response": None,
+        "num_inference_steps": 31,
+        "strength": 1,
+        "negative_prompt": "",
+        "guidance": "7.5",
+        "samples": 3,
+        "safety_checker": "no",
+        "auto_hint": None,
+        "seed": None,
+        "webhook": None,
+        "track_id": None,
+        "scheduler": "DDPMScheduler",
+        "base64": None,
+        "clip_skip": 2,
+        "controlnet_conditioning_scale": 0.35,
+        "temp": None,
+        "controlnet_type": "inpaint",
+        "controlnet_model": "inpaint",
+        "lora": None
+    })
+    headers = {
+        'Content-Type': 'application/json'
+    }
+    
+    response = requests.request("POST", url, headers=headers, data=payload)
+    output = response.text
+    return output
     
 @img_router.get('/{id}/{direction}', summary="Get one profile image")
 async def get_profile_image(id: str, direction: str):
