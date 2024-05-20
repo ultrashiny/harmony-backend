@@ -50,8 +50,12 @@ class ImageService:
         # Initialize MediaPipe Face Mesh
         face_mesh = mp_face_mesh.FaceMesh(static_image_mode=True, max_num_faces=1, refine_landmarks=True, min_detection_confidence=0.5)
         
-        img_path = f"./UPLOADS/{id}/f.jpg"
+        # img_path = f"./UPLOADS/{id}/f.jpg"
+        img_path = os.path.join("UPLOADS", str(id), "f.jpg")
         image = cv2.imread(img_path)
+        if image is None:
+            raise FileNotFoundError(f"Image not found at {img_path}")
+        
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         
         results = face_mesh.process(image_rgb)
@@ -73,9 +77,10 @@ class ImageService:
                 for point in hull:
                     direction = point - centroid
                     norm = np.linalg.norm(direction)
-                    normalized_direction = direction / norm
-                    new_point = point + normalized_direction * 20
-                    expanded_hull.append(new_point)
+                    if norm != 0:
+                        normalized_direction = direction / norm
+                        new_point = point + normalized_direction * 20
+                        expanded_hull.append(new_point)
                     
                 expanded_hull = np.array(expanded_hull, dtype=np.int32)
                 
@@ -84,15 +89,35 @@ class ImageService:
                 
                 # masked_image = cv2.bitwise_and(image, image, mask=mask)
                 
-                mask_url = f"./UPLOADS/{id}/mask.jpg"
+                # mask_url = f"./UPLOADS/{id}/mask.jpg"
+                output_dir = os.path.join("UPLOADS", str(id))
+                
+                if not os.path.exists(output_dir):
+                    os.makedirs(output_dir)
+                
+                mask_url = os.path.join(output_dir, "mask.jpg")
                 cv2.imwrite(mask_url, mask)
         
     @staticmethod
     async def generate_canny(id: str):
-        img_path = f"./UPLOADS/{id}/f.jpg"
+        # img_path = f"./UPLOADS/{id}/f.jpg"
+        img_path = os.path.join("UPLOADS", id, "f.jpg")
+        
+        if not os.path.exists(img_path):
+            raise FileNotFoundError(f"Image not found at {img_path}")
+        
         image = cv2.imread(img_path)
+        if image is None:
+            raise ValueError(f"Failed to load image from {img_path}")
+        
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         
         edges = cv2.Canny(gray_image, 50, 150)
-        canny_url = f"./UPLOADS/{id}/canny.jpg"
+        
+        output_dir = os.path.join("UPLOADS", id)
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+            
+        # canny_url = f"./UPLOADS/{id}/canny.jpg"
+        canny_url = os.path.join(output_dir, "canny.jpg")
         cv2.imwrite(canny_url, edges)
