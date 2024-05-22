@@ -99,12 +99,14 @@ async def get_idealize_image(id: str):
     }
     
     response = requests.request("POST", url, headers=headers, data=payload)
+    outputs = []
     if response.status_code == status.HTTP_200_OK:
         response_json = response.json()
         outputs = response_json["output"]
     else:
         print(f"Request failed with status code: {response.status_code}")
         print(response.text)
+        return response.text
     return outputs
     
 @img_router.get('/{id}/{direction}', summary="Get one profile image")
