@@ -93,9 +93,9 @@ class Measure:
                         return i, 0
                         # return i
                     else:
-                        return i, 0 if self.value <= (self.minArray[self.gender][i - 1] + self.thresholds[self.race]) else 1,
+                        return i, 1 if self.value <= (self.minArray[self.gender][i - 1] + self.thresholds[self.race]) else 0,
                         # return i
-            return i, 0 if self.value <= (self.minArray[self.gender][i - 1] + self.thresholds[self.race]) else 1,
+            return i, 1 if self.value <= (self.minArray[self.gender][i - 1] + self.thresholds[self.race]) else 0,
             # return i
         else:
             self.ideal = self.array[0]
