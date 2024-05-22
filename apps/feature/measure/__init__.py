@@ -385,19 +385,19 @@ class MeasureFacialThirds(Measure):
             self.ideal += f"{self.maxArray[self.value[2] == max(self.value)][self.gender][0] + self.thresholds[self.race]}"
             for i in range(len(self.minArray[0][0])):
                 if all(x > self.minArray[self.value[2] == max(self.value)][self.gender][i] + self.thresholds[self.race] and x < self.maxArray[self.value[2] == max(self.value)][self.gender][i] + self.thresholds[self.race] for x in self.value):
-                    # return i, 0
-                    return i
-            # return i, 0
-            return i
+                    return i, 0
+                    # return i
+            return i, 0
+            # return i
         else:
             self.ideal = f"{self.minArray[self.value[2] != max(self.value)][self.gender][0] + self.thresholds[self.race]} - "
             self.ideal += f"{self.maxArray[self.value[2] != max(self.value)][self.gender][0] + self.thresholds[self.race]}"
             for i in range(len(self.minArray[0][0])):
                 if all(x > self.minArray[self.value[2] != max(self.value)][self.gender][i] + self.thresholds[self.race] and x < self.maxArray[self.value[2] != max(self.value)][self.gender][i] + self.thresholds[self.race] for x in self.value):
-                    # return i, 0
-                    return i
-            # return i, 0
-            return i
+                    return i, 0
+                    # return i
+            return i, 0
+            # return i
 
 class MeasureLateralCanthalTilt(Measure):
     def calc(self):
