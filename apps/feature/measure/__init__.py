@@ -90,21 +90,21 @@ class Measure:
                 max = self.maxArray[self.gender][i] + self.thresholds[self.race]
                 if self.value >= min and self.value <= max:
                     if i == 0:
-                        # return i, 0
-                        return i
+                        return i, 0
+                        # return i
                     else:
-                        # return i, 0 if self.value <= (self.minArray[self.gender][i - 1] + self.thresholds[self.race]) else 1,
-                        return i
-            # return i, 0 if self.value <= (self.minArray[self.gender][i - 1] + self.thresholds[self.race]) else 1,
-            return i
+                        return i, 0 if self.value <= (self.minArray[self.gender][i - 1] + self.thresholds[self.race]) else 1,
+                        # return i
+            return i, 0 if self.value <= (self.minArray[self.gender][i - 1] + self.thresholds[self.race]) else 1,
+            # return i
         else:
             self.ideal = self.array[0]
             for i in range(len(self.array)):
                 if self.value == self.array[i]:
-                    # return i, 0
-                    return i
-            # return i, 0
-            return i
+                    return i, 0
+                    # return i
+            return i, 0
+            # return i
     
 class MeasureGonialAngle(Measure):
     def calc(self):
