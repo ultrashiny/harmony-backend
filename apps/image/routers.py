@@ -100,16 +100,17 @@ async def get_idealize_image(id: str):
     
     async with httpx.AsyncClient() as client:
         response = await client.post(url, headers=headers, json=payload)
+        print(response)
 
-    outputs = []
-    if response.status_code == status.HTTP_200_OK:
-        response_json = response.json()
-        outputs = response_json["output"]
-    else:
-        print(f"Request failed with status code: {response.status_code}")
-        print(response.text)
-        raise HTTPException(status_code=response.status_code, detail=response.text)
-    return outputs
+        outputs = []
+        if response.status_code == status.HTTP_200_OK:
+            response_json = response.json()
+            outputs = response_json["output"]
+        else:
+            print(f"Request failed with status code: {response.status_code}")
+            print(response.text)
+            raise HTTPException(status_code=response.status_code, detail=response.text)
+        return outputs
     
 @img_router.get('/{id}/{direction}', summary="Get one profile image")
 async def get_profile_image(id: str, direction: str):
