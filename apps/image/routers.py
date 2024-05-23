@@ -98,19 +98,24 @@ async def get_idealize_image(id: str):
         'Content-Type': 'application/json'
     }
     
-    async with httpx.AsyncClient() as client:
-        response = await client.post(url, headers=headers, json=payload)
-        print(response)
-
-        outputs = []
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, headers=headers, json=payload)
+        
         if response.status_code == status.HTTP_200_OK:
             response_json = response.json()
-            outputs = response_json["output"]
+            if "output" in response_json:
+                return response_json["output"]
+            else:
+                raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Key 'output' not found in the response")
         else:
-            print(f"Request failed with status code: {response.status_code}")
-            print(response.text)
             raise HTTPException(status_code=response.status_code, detail=response.text)
-        return outputs
+    
+    except httpx.RequestError as exc:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An error occurred while processing the request")
+    
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An unexpected error occurred")
     
 @img_router.get('/{id}/{direction}', summary="Get one profile image")
 async def get_profile_image(id: str, direction: str):
