@@ -1,5 +1,5 @@
 from beanie import init_beanie
-import uvicorn
+# import uvicorn
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -9,7 +9,9 @@ from apps.profile.models import Profile
 from apps.api import router
 from apps.config import settings
 
-
+import hypercorn.asyncio
+from hypercorn.config import Config
+import asyncio
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -42,10 +44,14 @@ async def shutdown():
 
 app.include_router(router, prefix="/api")
 
+config = Config()
+config.bind = ["0.0.0.0:8001"]
+
 if __name__ == "__main__":
-    uvicorn.run(
-        "main:app",
-        host=settings.HOST,
-        port=settings.PORT,
-        reload=settings.DEBUG_MODE,
-    )
+    # uvicorn.run(
+    #     "main:app",
+    #     host=settings.HOST,
+    #     port=settings.PORT,
+    #     reload=settings.DEBUG_MODE,
+    # )
+    asyncio.run(hypercorn.asyncio.serve(app, config))
