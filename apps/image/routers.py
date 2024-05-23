@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from fastapi.responses import FileResponse
-import requests
+import httpx
 
 from .service import ImageService
 from .schemas import ImageFeatures
@@ -98,7 +98,9 @@ async def get_idealize_image(id: str):
         'Content-Type': 'application/json'
     }
     
-    response = requests.request("POST", url, headers=headers, data=payload)
+    async with httpx.AsyncClient() as client:
+        response = await client.post(url, headers=headers, json=payload)
+
     outputs = []
     if response.status_code == status.HTTP_200_OK:
         response_json = response.json()
@@ -106,7 +108,7 @@ async def get_idealize_image(id: str):
     else:
         print(f"Request failed with status code: {response.status_code}")
         print(response.text)
-        return response.text
+        raise HTTPException(status_code=response.status_code, detail=response.text)
     return outputs
     
 @img_router.get('/{id}/{direction}', summary="Get one profile image")
