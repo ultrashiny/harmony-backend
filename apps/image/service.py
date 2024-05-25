@@ -51,7 +51,7 @@ class ImageService:
         face_mesh = mp_face_mesh.FaceMesh(static_image_mode=True, max_num_faces=1, refine_landmarks=True, min_detection_confidence=0.5)
         
         # img_path = f"./UPLOADS_TEMP/{id}/f.jpg"
-        img_path = os.path.join("UPLOADS", str(id), "f.jpg")
+        img_path = os.path.join("UPLOADS_TEMP", str(id), "f.jpg")
         image = cv2.imread(img_path)
         if image is None:
             raise FileNotFoundError(f"Image not found at {img_path}")
@@ -90,7 +90,7 @@ class ImageService:
                 # masked_image = cv2.bitwise_and(image, image, mask=mask)
                 
                 # mask_url = f"./UPLOADS_TEMP/{id}/mask.jpg"
-                output_dir = os.path.join("UPLOADS", str(id))
+                output_dir = os.path.join("UPLOADS_TEMP", str(id))
                 
                 if not os.path.exists(output_dir):
                     os.makedirs(output_dir)
@@ -101,7 +101,7 @@ class ImageService:
     @staticmethod
     async def generate_canny(id: str):
         # img_path = f"./UPLOADS_TEMP/{id}/f.jpg"
-        img_path = os.path.join("UPLOADS", id, "f.jpg")
+        img_path = os.path.join("UPLOADS_TEMP", id, "f.jpg")
         
         if not os.path.exists(img_path):
             raise FileNotFoundError(f"Image not found at {img_path}")
@@ -114,7 +114,7 @@ class ImageService:
         
         edges = cv2.Canny(gray_image, 50, 150)
         
-        output_dir = os.path.join("UPLOADS", id)
+        output_dir = os.path.join("UPLOADS_TEMP", id)
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
             
