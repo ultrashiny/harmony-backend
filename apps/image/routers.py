@@ -15,7 +15,7 @@ async def upload(id: str, direction: str, img: UploadFile = File(...),
                  ):
     # if not user:
     #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
-    dir = Path(f"./UPLOADS/{id}")
+    dir = Path(f"./UPLOADS_TEMP/{id}")
     dir.mkdir(parents=True, exist_ok=True)
     return await ImageService.save(dir, direction, img)
 
@@ -37,7 +37,7 @@ async def get_feature_image(id: str, index: int):
 
 @img_router.get('/mask/{id}', summary="Get one mask image")
 async def get_mask_image(id: str):
-    img_path = f"./UPLOADS/{id}/mask.jpg"
+    img_path = f"./UPLOADS_TEMP/{id}/mask.jpg"
     path_obj = Path(img_path)
     # if not path_obj.exists():
     await ImageService.generate_mask(id)
@@ -46,7 +46,7 @@ async def get_mask_image(id: str):
 
 @img_router.get('/canny/{id}', summary="Get one canny image")
 async def get_canny_image(id: str):
-    img_path = f"./UPLOADS/{id}/canny.jpg"
+    img_path = f"./UPLOADS_TEMP/{id}/canny.jpg"
     path_obj = Path(img_path)
     # if not path_obj.exists():
     await ImageService.generate_canny(id)
@@ -111,7 +111,7 @@ async def get_idealize_image(id: str):
     
 @img_router.get('/{id}/{direction}', summary="Get one profile image")
 async def get_profile_image(id: str, direction: str):
-    img_path = f"./UPLOADS/{id}/{direction}.jpg"
+    img_path = f"./UPLOADS_TEMP/{id}/{direction}.jpg"
     path_obj = Path(img_path)
     if not path_obj.exists():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"You need to upload the images")

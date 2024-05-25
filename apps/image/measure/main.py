@@ -1464,7 +1464,7 @@ async def createReportImages(id, f_canvas, s_canvas, points, lines):
     os.makedirs(DIR, exist_ok=True)
     RLs = lines
     points = await CompleteMarkPoints(points, RLs)
-    f_url = f"./UPLOADS/{id}/f.jpg"
+    f_url = f"./UPLOADS_TEMP/{id}/f.jpg"
     create_eye_separation_ratio_image(points, RLs, DIR, 0, f_canvas)
     create_facial_thirds_image(points, RLs, DIR, 1, f_canvas)
     create_lateral_canthal_tilt_image(points, RLs, DIR, 2, f_canvas)
