@@ -48,4 +48,6 @@ if __name__ == "__main__":
         host=settings.HOST,
         port=settings.PORT,
         reload=settings.DEBUG_MODE,
+        timeout_keep_alive=10,
+        timeout_graceful_shutdown=30
     )
