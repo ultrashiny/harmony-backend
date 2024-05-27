@@ -17,7 +17,12 @@ async def upload(id: str, direction: str, img: UploadFile = File(...),
     #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
     dir = Path(f"./UPLOADS/{id}")
     dir.mkdir(parents=True, exist_ok=True)
-    return await ImageService.save(dir, direction, img)
+
+    res = await ImageService.save(dir, direction, img)
+    await ImageService.generate_mask(id)
+    await ImageService.generate_canny(id)
+    
+    return res
 
 @img_router.post('/generate', summary="Generate feature images")
 async def generate(features: ImageFeatures, 
@@ -40,7 +45,7 @@ async def get_mask_image(id: str):
     img_path = f"./UPLOADS/{id}/mask.jpg"
     path_obj = Path(img_path)
     # if not path_obj.exists():
-    await ImageService.generate_mask(id)
+    # await ImageService.generate_mask(id)
     
     return FileResponse(img_path, media_type="image/jpeg")
 
@@ -49,7 +54,7 @@ async def get_canny_image(id: str):
     img_path = f"./UPLOADS/{id}/canny.jpg"
     path_obj = Path(img_path)
     # if not path_obj.exists():
-    await ImageService.generate_canny(id)
+    # await ImageService.generate_canny(id)
         
     return FileResponse(img_path, media_type="image/jpeg")
 
