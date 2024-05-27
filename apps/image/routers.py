@@ -103,7 +103,7 @@ async def get_idealize_image(id: str):
         'Content-Type': 'application/json'
     }
     
-    response = requests.request("POST", url, headers=headers, data=payload, timeout=(10, 100))
+    response = requests.request("POST", url, headers=headers, data=payload, timeout=(100, 300))
     outputs = []
     if response.status_code == status.HTTP_200_OK:
         response_json = response.json()
