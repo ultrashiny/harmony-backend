@@ -165,4 +165,4 @@ def getProfileLandmarks(imgPath):
     return applyFormat(profileLandmarks)
 
 def mainProcess(id: str):    
-    return {"points":getProfileLandmarks(f"./UPLOADS_TEMP/{id}/f.jpg")}
+    return {"points":getProfileLandmarks(f"./UPLOADS/{id}/f.jpg")}

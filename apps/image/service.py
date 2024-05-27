@@ -1,4 +1,5 @@
 import os
+import timeit
 from pathlib import Path
 from fastapi import HTTPException, UploadFile, status
 from PIL import Image
@@ -33,12 +34,12 @@ class ImageService:
         
     @staticmethod
     async def generate(id: str, points: list, lines: list):
-        f = Path(f"./UPLOADS_TEMP/{id}") / "f.jpg"
-        s = Path(f"./UPLOADS_TEMP/{id}") / "s.jpg"
+        f = Path(f"./UPLOADS/{id}") / "f.jpg"
+        s = Path(f"./UPLOADS/{id}") / "s.jpg"
         if not os.path.exists(f):
-            f = Path(f"./UPLOADS_TEMP/sample") / "f.jpg"
+            f = Path(f"./UPLOADS/sample") / "f.jpg"
         if not os.path.exists(s):
-            s = Path(f"./UPLOADS_TEMP/sample") / "s.jpg"
+            s = Path(f"./UPLOADS/sample") / "s.jpg"
         f_canva = GetCanva(f)
         s_canva = GetCanva(s)
         await createReportImages(id, f_canva, s_canva, points, lines)
@@ -50,9 +51,12 @@ class ImageService:
         # Initialize MediaPipe Face Mesh
         face_mesh = mp_face_mesh.FaceMesh(static_image_mode=True, max_num_faces=1, refine_landmarks=True, min_detection_confidence=0.5)
         
-        # img_path = f"./UPLOADS_TEMP/{id}/f.jpg"
-        img_path = os.path.join("UPLOADS_TEMP", str(id), "f.jpg")
+        # img_path = f"./UPLOADS/{id}/f.jpg"
+        img_path = os.path.join("UPLOADS", str(id), "f.jpg")
+        start_time = timeit.default_timer()
         image = cv2.imread(img_path)
+        end_time = timeit.default_timer()
+        print('----------------------Imread time', end_time - start_time)
         if image is None:
             raise FileNotFoundError(f"Image not found at {img_path}")
         
@@ -89,8 +93,8 @@ class ImageService:
                 
                 # masked_image = cv2.bitwise_and(image, image, mask=mask)
                 
-                # mask_url = f"./UPLOADS_TEMP/{id}/mask.jpg"
-                output_dir = os.path.join("UPLOADS_TEMP", str(id))
+                # mask_url = f"./UPLOADS/{id}/mask.jpg"
+                output_dir = os.path.join("UPLOADS", str(id))
                 
                 if not os.path.exists(output_dir):
                     os.makedirs(output_dir)
@@ -100,8 +104,8 @@ class ImageService:
         
     @staticmethod
     async def generate_canny(id: str):
-        # img_path = f"./UPLOADS_TEMP/{id}/f.jpg"
-        img_path = os.path.join("UPLOADS_TEMP", id, "f.jpg")
+        # img_path = f"./UPLOADS/{id}/f.jpg"
+        img_path = os.path.join("UPLOADS", id, "f.jpg")
         
         if not os.path.exists(img_path):
             raise FileNotFoundError(f"Image not found at {img_path}")
@@ -114,10 +118,10 @@ class ImageService:
         
         edges = cv2.Canny(gray_image, 50, 150)
         
-        output_dir = os.path.join("UPLOADS_TEMP", id)
+        output_dir = os.path.join("UPLOADS", id)
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
             
-        # canny_url = f"./UPLOADS_TEMP/{id}/canny.jpg"
+        # canny_url = f"./UPLOADS/{id}/canny.jpg"
         canny_url = os.path.join(output_dir, "canny.jpg")
         cv2.imwrite(canny_url, edges)
