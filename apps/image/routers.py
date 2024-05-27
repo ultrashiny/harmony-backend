@@ -62,7 +62,7 @@ async def get_canny_image(id: str):
 async def get_idealize_image(id: str):
     url = "https://modelslab.com/api/v1/enterprise/controlnet"
     payload = json.dumps({
-        "key": "u1rtaxxctmrwp1",
+        "key": "XakoCvbyhQa0t7txlXVeRJmsvO9rbCslRBNWzsUj9WwbSuFFjE9ecpI3D2JV",
         "model_id": "realistic-vision-v51",
         "init_image": f"https://harmonyapp.ai/api/img/{id}/f",
         "mask_image": f"https://harmonyapp.ai/api/img/mask/{id}",
