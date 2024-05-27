@@ -1,7 +1,7 @@
 /.venv
 /venv
 /UPLOADS
-/UPLOADS_TEMP
+/UPLOADS
 /GENERATES
 /REPORTS
 /.env
