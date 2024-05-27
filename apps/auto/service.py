@@ -24,12 +24,12 @@ class ImageService:
         
     @staticmethod
     async def generate(id: str, points: json, lines: json):
-        f = Path(f"./UPLOADS/{id}") / "f.jpg"
-        s = Path(f"./UPLOADS/{id}") / "s.jpg"
+        f = Path(f"./UPLOADS_TEMP/{id}") / "f.jpg"
+        s = Path(f"./UPLOADS_TEMP/{id}") / "s.jpg"
         if not os.path.exists(f):
-            f = Path(f"./UPLOADS/sample") / "f.jpg"
+            f = Path(f"./UPLOADS_TEMP/sample") / "f.jpg"
         if not os.path.exists(s):
-            s = Path(f"./UPLOADS/sample") / "s.jpg"
+            s = Path(f"./UPLOADS_TEMP/sample") / "s.jpg"
         f_canva = GetCanva(f)
         s_canva = GetCanva(s)
         await createReportImages(id, f_canva, s_canva, points, lines)
