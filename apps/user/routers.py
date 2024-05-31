@@ -67,10 +67,15 @@ async def create_checkout_session(url: str, price_id: str, user:User = Depends(g
     return response.url
 
 @user_router.post('/cancel_subscription')
-async def cancel_subscription(subscription_id: str):
+async def cancel_subscription(subscription_id: str, user:User = Depends(get_current_user)):
     try:
         canceled_subscription = stripe.Subscription.delete(subscription_id)
+        if user:
+            user.auth = 0
+            user.subscription_id = None
+            await user.save()
         return {"status": "success", "data": canceled_subscription}
+
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     
