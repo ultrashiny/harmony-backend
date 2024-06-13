@@ -1,3 +1,4 @@
+import os
 from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 
@@ -10,6 +11,12 @@ from .schemas import ProfileDownload, ProfileSave
 import pymongo
 
 profile_router = APIRouter()
+
+@profile_router.get('/all', summary="Get all uploaded profiles")
+async def get_profiles():
+    upload_dir = "./UPLOADS"
+    profiles = [name for name in os.listdir(upload_dir) if os.path.isdir(os.path.join(upload_dir, name))]
+    return {"profile_list": profiles}
 
 @profile_router.post('/', summary="Save/Update one profile")
 async def create_profile(data: ProfileSave, 

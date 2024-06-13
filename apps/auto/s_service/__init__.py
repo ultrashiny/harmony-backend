@@ -1,7 +1,9 @@
 import numpy as np
+import cv2
+from ultralytics import YOLO
 
 from apps.math import applyFormat
-
+model = YOLO("./models/side_detect.pt")
 def loadLandmark(id, Landmarks):
     path = f"./models/markset/{id}.pts"
     with open(path, 'r') as file:
@@ -18,10 +20,24 @@ def loadLandmark(id, Landmarks):
     
     return Landmarks
 
-def getProfileLandmarks(imgPath, id="sample"):
+def getProfileLandmarks(imgPath):
     profileLandmarks = np.zeros((30, 2, 2))
-    profileLandmarks = loadLandmark(id, profileLandmarks)
-    
+
+    image = cv2.imread(imgPath)
+    results = model(image)
+    keypoints_list = []
+
+    for result in results:
+        if result.keypoints is not None:
+            keypoints = result.keypoints.xy.cpu().numpy()
+            labels = result.keypoints.cls.cpu().numpy() if result.keypoints.cls is not None else np.zeros(len(keypoints))
+
+            for kp, label in zip(keypoints, labels):
+                for point, lbl in zip(kp, label):
+                    x, y = point[:2]
+                    keypoints_list.append({"x": float(x), "y": float(y), "label": int(lbl)})
+
+            print(keypoints_list)    
     return applyFormat(profileLandmarks)
 
 def mainProcess(id: str):
