@@ -20,24 +20,26 @@ def loadLandmark(id, Landmarks):
     
     return Landmarks
 
-def getProfileLandmarks(imgPath):
+def getProfileLandmarks(imgPath, id="sample"):
     profileLandmarks = np.zeros((30, 2, 2))
 
-    image = cv2.imread(imgPath)
-    results = model(image)
-    keypoints_list = []
+    # image = cv2.imread(imgPath)
+    # results = model(image)
+    # keypoints_list = []
 
-    for result in results:
-        if result.keypoints is not None:
-            keypoints = result.keypoints.xy.cpu().numpy()
-            labels = result.keypoints.cls.cpu().numpy() if result.keypoints.cls is not None else np.zeros(len(keypoints))
+    # for result in results:
+    #     if result.keypoints is not None:
+    #         keypoints = result.keypoints.xy.cpu().numpy()
+    #         labels = result.keypoints.cls.cpu().numpy() if result.keypoints.cls is not None else np.zeros(len(keypoints))
 
-            for kp, label in zip(keypoints, labels):
-                for point, lbl in zip(kp, label):
-                    x, y = point[:2]
-                    keypoints_list.append({"x": float(x), "y": float(y), "label": int(lbl)})
+    #         for kp, label in zip(keypoints, labels):
+    #             for point, lbl in zip(kp, label):
+    #                 x, y = point[:2]
+    #                 keypoints_list.append({"x": float(x), "y": float(y), "label": int(lbl)})
 
-            print(keypoints_list)    
+    #         print(keypoints_list)    
+    
+    profileLandmarks = loadLandmark(id, profileLandmarks)
     return applyFormat(profileLandmarks)
 
 def mainProcess(id: str):
