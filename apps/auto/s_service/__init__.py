@@ -1,9 +1,9 @@
 import numpy as np
 import cv2
-from ultralytics import YOLO
+# from ultralytics import YOLO
 
 from apps.math import applyFormat
-model = YOLO("./models/side_detect.pt")
+# model = YOLO("./models/side_detect.pt")
 def loadLandmark(id, Landmarks):
     path = f"./models/markset/{id}.pts"
     with open(path, 'r') as file:

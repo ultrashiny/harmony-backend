@@ -20,3 +20,4 @@ mediapipe
 python-docx
 openpyxl
 stripe
+coinbase_commerce
