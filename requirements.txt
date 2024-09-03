@@ -16,7 +16,6 @@ bcrypt
 python-multipart
 pillow
 opencv-python
-dlib==19.24.2
 mediapipe 
 python-docx
 openpyxl
